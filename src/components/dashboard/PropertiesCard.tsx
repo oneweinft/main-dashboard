@@ -1,17 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
-
-const data = [
-  { date: "9 Dec", properties: 2380 },
-  { date: "16 Dec", properties: 2395 },
-  { date: "23 Dec", properties: 2390 },
-  { date: "30 Dec", properties: 2400 },
-  { date: "6 Jan", properties: 2404 },
-];
+import { useData } from "@/context/DataContext";
 
 const periods = ["1m", "3m", "6m", "YTD", "1y", "All"];
 
 export function PropertiesCard() {
+  const { properties } = useData();
+  const total = properties.length;
+
+  const data = [
+    { date: "9 Dec", properties: Math.max(total - 4, 0) },
+    { date: "16 Dec", properties: Math.max(total - 3, 0) },
+    { date: "23 Dec", properties: Math.max(total - 2, 0) },
+    { date: "30 Dec", properties: Math.max(total - 1, 0) },
+    { date: "6 Jan", properties: total },
+  ];
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -33,7 +37,7 @@ export function PropertiesCard() {
           </div>
         </div>
         <div className="flex items-baseline gap-2 mt-1">
-          <span className="text-2xl font-extrabold text-foreground">2404</span>
+          <span className="text-2xl font-extrabold text-foreground">{total}</span>
           <span className="text-sm text-muted-foreground">Total Active</span>
         </div>
       </CardHeader>
@@ -45,19 +49,19 @@ export function PropertiesCard() {
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11, fill: "hsl(160, 20%, 55%)" }}
+                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
               />
-              <YAxis hide domain={["dataMin - 30", "dataMax + 10"]} />
+              <YAxis hide domain={["dataMin - 2", "dataMax + 2"]} />
               <Tooltip
                 contentStyle={{
                   borderRadius: 8,
-                  border: "1px solid hsl(180, 10%, 18%)",
-                  background: "hsl(180, 10%, 10%)",
-                  color: "hsl(160, 30%, 90%)",
+                  border: "1px solid hsl(var(--border))",
+                  background: "hsl(var(--card))",
+                  color: "hsl(var(--foreground))",
                   fontSize: 12,
                 }}
               />
-              <Bar dataKey="properties" fill="hsl(160, 80%, 50%)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="properties" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
