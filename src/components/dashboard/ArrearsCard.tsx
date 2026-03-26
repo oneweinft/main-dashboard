@@ -12,17 +12,17 @@ const arrearsData = [
 export function ArrearsCard() {
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-primary text-base font-bold">Arrears</CardTitle>
+      <CardHeader className="pb-3 px-3 sm:px-6">
+        <CardTitle className="text-primary text-sm sm:text-base font-bold">Arrears</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2.5 sm:space-y-3 px-3 sm:px-6">
         {arrearsData.map((item) => (
           <div key={item.label} className="space-y-1">
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-xs sm:text-sm">
               <span className="text-muted-foreground">{item.label}</span>
               <span className="font-medium text-foreground">{item.value}%</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+            <div className="h-1.5 sm:h-2 w-full rounded-full bg-muted overflow-hidden">
               <div
                 className={`h-full rounded-full ${item.color}`}
                 style={{ width: `${item.value}%` }}
@@ -31,9 +31,9 @@ export function ArrearsCard() {
           </div>
         ))}
 
-        <div className="flex items-center gap-2 pt-2">
+        <div className="flex items-center gap-2 pt-1.5 sm:pt-2">
           <span className="h-2 w-2 rounded-full bg-accent" />
-          <span className="text-xs text-muted-foreground">Completed</span>
+          <span className="text-[10px] sm:text-xs text-muted-foreground">Completed</span>
         </div>
       </CardContent>
     </Card>

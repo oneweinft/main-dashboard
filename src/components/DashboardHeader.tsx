@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Search, Bot, Send, X, Mic } from "lucide-react";
+import { Bell, Search, Bot, Send, X, Mic, Menu } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -13,8 +13,8 @@ function MiniOrb({ isListening }: { isListening: boolean }) {
           key={i}
           className="absolute rounded-full"
           style={{
-            width: 80 + i * 24,
-            height: 80 + i * 24,
+            width: 60 + i * 18,
+            height: 60 + i * 18,
             background: `radial-gradient(circle, hsla(160, 80%, 50%, ${0.06 - i * 0.02}) 0%, transparent 70%)`,
           }}
           animate={{
@@ -25,7 +25,7 @@ function MiniOrb({ isListening }: { isListening: boolean }) {
         />
       ))}
       <motion.div
-        className="relative h-20 w-20 rounded-full"
+        className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-full"
         style={{
           background:
             "radial-gradient(circle at 40% 35%, hsl(160, 80%, 75%), hsl(160, 80%, 50%) 40%, hsl(170, 70%, 35%) 70%, hsl(180, 60%, 15%) 100%)",
@@ -78,29 +78,29 @@ export function DashboardHeader() {
   };
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border px-4 relative bg-card">
-      <div className="flex items-center gap-3">
+    <header className="flex h-12 sm:h-14 items-center justify-between border-b border-border px-3 sm:px-4 relative bg-card">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <SidebarTrigger />
-        <h1 className="text-lg font-bold text-foreground">Dashboard</h1>
+        <h1 className="text-base sm:text-lg font-bold text-foreground truncate">Dashboard</h1>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 text-primary border-primary/30 hover:bg-primary/10"
+          className="gap-1.5 sm:gap-2 text-primary border-primary/30 hover:bg-primary/10 h-8 px-2 sm:px-3"
           onClick={() => setAiOpen((prev) => !prev)}
         >
           <Bot className="h-4 w-4" />
-          <span className="hidden sm:inline">AI Assistant</span>
+          <span className="hidden md:inline text-sm">AI Assistant</span>
         </Button>
-        <Button variant="ghost" size="icon" className="text-muted-foreground">
+        <Button variant="ghost" size="icon" className="text-muted-foreground h-8 w-8">
           <Search className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="icon" className="relative text-muted-foreground">
+        <Button variant="ghost" size="icon" className="relative text-muted-foreground h-8 w-8">
           <Bell className="h-4 w-4" />
-          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive" />
+          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-destructive" />
         </Button>
-        <div className="ml-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+        <div className="ml-1 sm:ml-2 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
           JD
         </div>
       </div>
@@ -116,7 +116,7 @@ export function DashboardHeader() {
               scale: { duration: 0.2 },
               y: { duration: 3, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
             }}
-            className="absolute right-4 top-[calc(100%+8px)] z-50 w-80 rounded-2xl border border-primary/15 bg-background p-5 shadow-[0_0_40px_hsla(160,80%,50%,0.1)]"
+            className="absolute right-2 sm:right-4 top-[calc(100%+8px)] z-50 w-[calc(100vw-1rem)] sm:w-80 max-w-sm rounded-2xl border border-primary/15 bg-background p-4 sm:p-5 shadow-[0_0_40px_hsla(160,80%,50%,0.1)]"
           >
             <Button
               variant="ghost"
@@ -127,7 +127,7 @@ export function DashboardHeader() {
               <X className="h-3.5 w-3.5" />
             </Button>
 
-            <div className="flex flex-col items-center gap-4 pt-2">
+            <div className="flex flex-col items-center gap-3 sm:gap-4 pt-2">
               <MiniOrb isListening={isListening} />
 
               <motion.p
@@ -140,7 +140,7 @@ export function DashboardHeader() {
 
               <button
                 onClick={() => setIsListening((p) => !p)}
-                className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
+                className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-all ${
                   isListening
                     ? "bg-primary/20 shadow-[0_0_15px_hsla(160,80%,50%,0.3)]"
                     : "bg-secondary hover:bg-muted"
@@ -156,7 +156,7 @@ export function DashboardHeader() {
                     placeholder="Ask AI something..."
                     value={aiQuery}
                     onChange={(e) => setAiQuery(e.target.value)}
-                    className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+                    className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none min-w-0"
                   />
                 </div>
                 <button

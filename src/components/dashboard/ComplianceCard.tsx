@@ -7,8 +7,8 @@ function DonutChart({ value, max, label, sublabel, color }: { value: number; max
 
   return (
     <div className="flex flex-col items-center">
-      <div className="relative h-24 w-24">
-        <svg className="h-24 w-24 -rotate-90" viewBox="0 0 100 100">
+      <div className="relative h-20 w-20 sm:h-24 sm:w-24">
+        <svg className="h-full w-full -rotate-90" viewBox="0 0 100 100">
           <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(var(--muted))" strokeWidth="8" />
           <circle
             cx="50" cy="50" r="40" fill="none"
@@ -20,11 +20,11 @@ function DonutChart({ value, max, label, sublabel, color }: { value: number; max
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xl font-extrabold text-foreground">{value}</span>
+          <span className="text-lg sm:text-xl font-extrabold text-foreground">{value}</span>
         </div>
       </div>
-      <span className="mt-2 text-sm font-semibold text-foreground">{label}</span>
-      <span className="text-xs text-destructive">{sublabel}</span>
+      <span className="mt-1.5 sm:mt-2 text-xs sm:text-sm font-semibold text-foreground">{label}</span>
+      <span className="text-[10px] sm:text-xs text-destructive">{sublabel}</span>
     </div>
   );
 }
@@ -32,13 +32,13 @@ function DonutChart({ value, max, label, sublabel, color }: { value: number; max
 export function ComplianceCard() {
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-primary text-base font-bold">Compliance</CardTitle>
+      <CardHeader className="pb-3 px-3 sm:px-6">
+        <CardTitle className="text-primary text-sm sm:text-base font-bold">Compliance</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-6">
-          <DonutChart value={273} max={300} label="Smoke Alarm" sublabel="No Certificate" color="hsl(160, 80%, 50%)" />
-          <DonutChart value={2} max={300} label="Pool Safety" sublabel="Exp. Certificate" color="hsl(195, 100%, 55%)" />
+      <CardContent className="px-3 sm:px-6">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6">
+          <DonutChart value={273} max={300} label="Smoke Alarm" sublabel="No Certificate" color="hsl(var(--primary))" />
+          <DonutChart value={2} max={300} label="Pool Safety" sublabel="Exp. Certificate" color="hsl(var(--info))" />
         </div>
       </CardContent>
     </Card>
