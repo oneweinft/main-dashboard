@@ -138,7 +138,27 @@ type Section = typeof sidebarItems[number]["title"];
 const TradiePortal = () => {
   const [activeNav, setActiveNav] = useState<Section>("Dashboard");
   const [showWorkOrderForm, setShowWorkOrderForm] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<{ name: string; type: "photo" | "video"; size: string }[]>([]);
+  const [woUploadedFiles, setWoUploadedFiles] = useState<{ name: string; type: "photo" | "video"; size: string }[]>([]);
+  const [uploadTag, setUploadTag] = useState<"before" | "after" | "general">("general");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const woFileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  const handleFileSelect = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setter: React.Dispatch<React.SetStateAction<{ name: string; type: "photo" | "video"; size: string }[]>>
+  ) => {
+    const files = e.target.files;
+    if (!files) return;
+    const newFiles = Array.from(files).map((f) => ({
+      name: f.name,
+      type: (f.type.startsWith("video") ? "video" : "photo") as "photo" | "video",
+      size: f.size > 1048576 ? `${(f.size / 1048576).toFixed(1)} MB` : `${(f.size / 1024).toFixed(0)} KB`,
+    }));
+    setter((prev) => [...prev, ...newFiles]);
+    e.target.value = "";
+  };
 
   const renderContent = () => {
     switch (activeNav) {
