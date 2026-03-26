@@ -13,9 +13,10 @@ import {
   Sparkles,
   CalendarDays,
   LayoutDashboard,
+  ArrowLeft,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const sidebarItems = [
   { title: "Dashboard", icon: LayoutDashboard, active: true },
@@ -45,20 +46,26 @@ const summaryCards = [
 
 const RenterPortal = () => {
   const [activeNav, setActiveNav] = useState("Dashboard");
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex bg-[hsl(180,10%,8%)] text-[hsl(160,30%,90%)]">
+    <div className="min-h-screen flex bg-background text-foreground">
       {/* Sidebar */}
-      <aside className="w-56 shrink-0 border-r border-[hsl(180,10%,15%)] flex flex-col p-4">
+      <aside className="w-56 shrink-0 border-r border-border flex flex-col p-4 bg-sidebar">
+        <div className="flex items-center gap-2 mb-2">
+          <Button variant="ghost" size="sm" onClick={() => navigate("/services-portal")} className="text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          </Button>
+        </div>
         <div className="flex items-center gap-2 mb-8">
-          <Sparkles className="h-6 w-6 text-[hsl(160,80%,50%)]" />
+          <Sparkles className="h-6 w-6 text-primary" />
           <div>
-            <p className="text-sm font-bold text-[hsl(160,30%,95%)]">Renter Portal</p>
-            <p className="text-[10px] text-[hsl(160,20%,55%)]">Lease Hub</p>
+            <p className="text-sm font-bold text-foreground">Renter Portal</p>
+            <p className="text-[10px] text-muted-foreground">Lease Hub</p>
           </div>
         </div>
 
-        <p className="text-[10px] uppercase tracking-widest text-[hsl(160,20%,45%)] mb-3">Navigation</p>
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">Navigation</p>
         <nav className="space-y-1 flex-1">
           {sidebarItems.map((item) => (
             <button
@@ -66,8 +73,8 @@ const RenterPortal = () => {
               onClick={() => setActiveNav(item.title)}
               className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
                 activeNav === item.title
-                  ? "bg-[hsl(160,80%,50%)]/15 text-[hsl(160,80%,50%)] font-medium"
-                  : "text-[hsl(160,20%,60%)] hover:text-[hsl(160,30%,80%)] hover:bg-[hsl(180,10%,12%)]"
+                  ? "bg-primary/15 text-primary font-medium"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}
             >
               <item.icon className="h-4 w-4" />
@@ -79,57 +86,50 @@ const RenterPortal = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-auto">
-        {/* Header */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-10 w-10 rounded-xl bg-[hsl(160,80%,50%)]/15 flex items-center justify-center">
-            <LayoutDashboard className="h-5 w-5 text-[hsl(160,80%,50%)]" />
+          <div className="h-10 w-10 rounded-xl bg-primary/15 flex items-center justify-center">
+            <LayoutDashboard className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-[hsl(160,30%,95%)]">Dashboard</h1>
-            <p className="text-xs text-[hsl(160,20%,55%)]">Your tenancy at a glance</p>
+            <h1 className="text-xl font-bold text-foreground">Dashboard</h1>
+            <p className="text-xs text-muted-foreground">Your tenancy at a glance</p>
           </div>
         </div>
 
-        {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {summaryCards.map((card) => (
-            <div
-              key={card.label}
-              className="rounded-xl border border-[hsl(180,10%,18%)] bg-[hsl(180,10%,10%)] p-4 space-y-2"
-            >
-              <div className="flex items-center gap-2 text-[hsl(160,20%,55%)]">
-                <card.icon className="h-3.5 w-3.5 text-[hsl(160,80%,50%)]" />
+            <div key={card.label} className="rounded-xl border border-border bg-card p-4 space-y-2">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <card.icon className="h-3.5 w-3.5 text-primary" />
                 <span className="text-xs">{card.label}</span>
               </div>
-              <p className="text-xl font-bold text-[hsl(160,30%,95%)]">{card.value}</p>
-              <p className="text-xs text-[hsl(160,20%,55%)]">{card.sub}</p>
+              <p className="text-xl font-bold text-foreground">{card.value}</p>
+              <p className="text-xs text-muted-foreground">{card.sub}</p>
             </div>
           ))}
         </div>
 
-        {/* Quick Access */}
-        <h2 className="text-sm font-bold text-[hsl(160,30%,95%)] mb-3">Quick Access</h2>
+        <h2 className="text-sm font-bold text-foreground mb-3">Quick Access</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
           {quickAccessItems.map((item) => (
             <button
               key={item.title}
-              className="flex items-center justify-between rounded-xl border border-[hsl(180,10%,18%)] bg-[hsl(180,10%,10%)] px-4 py-3 text-sm text-[hsl(160,30%,90%)] hover:border-[hsl(160,80%,50%)]/30 transition-colors"
+              className="flex items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground hover:border-primary/30 transition-colors"
             >
               {item.title}
-              <ArrowRight className="h-4 w-4 text-[hsl(160,20%,55%)]" />
+              <ArrowRight className="h-4 w-4 text-muted-foreground" />
             </button>
           ))}
         </div>
 
-        {/* AGI Recommendation */}
-        <div className="rounded-xl border border-[hsl(160,80%,50%)]/20 bg-[hsl(160,80%,50%)]/5 p-5">
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
           <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="h-4 w-4 text-[hsl(160,80%,50%)]" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[hsl(160,80%,50%)]">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="text-xs font-bold uppercase tracking-wider text-primary">
               AGI Recommendation
             </span>
           </div>
-          <p className="text-sm text-[hsl(160,20%,65%)] leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             Your lease renewal window opens in 60 days. Based on market analysis, renewing early could save you up to 5% on your monthly rent. Consider starting the conversation with your agent.
           </p>
         </div>
