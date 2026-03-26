@@ -23,10 +23,25 @@ import {
   Download,
   ClipboardCheck,
   XCircle,
+  Video,
+  Camera,
+  Mic,
+  MicOff,
+  VideoOff,
+  Monitor,
+  PhoneOff,
+  Users,
+  ExternalLink,
+  PlayCircle,
+  FileVideo,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const sidebarItems = [
   { title: "Dashboard", icon: LayoutDashboard },
@@ -152,6 +167,11 @@ type Section = typeof sidebarItems[number]["title"];
 const RenterPortal = () => {
   const [activeNav, setActiveNav] = useState<Section>("Dashboard");
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [liveOpen, setLiveOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isCamOff, setIsCamOff] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   const renderContent = () => {
     switch (activeNav) {
@@ -208,8 +228,80 @@ const RenterPortal = () => {
       case "Inspection Center":
         return (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-foreground">Inspections</h2>
-            <p className="text-sm text-muted-foreground">Entry report, routine inspections & schedule</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-foreground">Inspections</h2>
+                <p className="text-sm text-muted-foreground">Entry report, routine inspections & virtual camera sessions</p>
+              </div>
+              <Dialog open={liveOpen} onOpenChange={setLiveOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="gap-2"><Video className="h-4 w-4" /> Join Virtual Inspection</Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader><DialogTitle>Virtual Inspection — Live Session</DialogTitle></DialogHeader>
+                  <div className="relative rounded-xl bg-muted aspect-video flex items-center justify-center overflow-hidden">
+                    <div className="text-center space-y-3">
+                      <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                        <Camera className="h-8 w-8 text-primary/40" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">Camera preview — walk through your property</p>
+                      <p className="text-xs text-muted-foreground/60">Your property manager will guide the inspection via Zoom or Teams</p>
+                    </div>
+                    {isRecording && (
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-destructive/90 text-destructive-foreground px-2.5 py-1 rounded-full text-xs font-medium">
+                        <span className="h-2 w-2 rounded-full bg-destructive-foreground animate-pulse" />
+                        REC
+                      </div>
+                    )}
+                    <div className="absolute bottom-3 right-3 w-28 h-20 rounded-lg bg-card border border-border flex items-center justify-center">
+                      <Users className="h-5 w-5 text-muted-foreground/40" />
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-3 py-2">
+                    <Button variant={isMuted ? "destructive" : "outline"} size="icon" className="rounded-full h-10 w-10" onClick={() => setIsMuted(!isMuted)}>
+                      {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                    </Button>
+                    <Button variant={isCamOff ? "destructive" : "outline"} size="icon" className="rounded-full h-10 w-10" onClick={() => setIsCamOff(!isCamOff)}>
+                      {isCamOff ? <VideoOff className="h-4 w-4" /> : <Video className="h-4 w-4" />}
+                    </Button>
+                    <Button variant="outline" size="icon" className="rounded-full h-10 w-10"><Monitor className="h-4 w-4" /></Button>
+                    <Button
+                      variant={isRecording ? "destructive" : "outline"}
+                      size="sm"
+                      className="rounded-full px-4 gap-2"
+                      onClick={() => {
+                        setIsRecording(!isRecording);
+                        toast({ title: isRecording ? "Recording Stopped" : "Recording Started", description: isRecording ? "Video saved to your inspection records." : "Recording audio and video..." });
+                      }}
+                    >
+                      <span className={`h-2.5 w-2.5 rounded-full ${isRecording ? "bg-destructive-foreground animate-pulse" : "bg-destructive"}`} />
+                      {isRecording ? "Stop" : "Record"}
+                    </Button>
+                    <Button variant="destructive" size="icon" className="rounded-full h-10 w-10" onClick={() => setLiveOpen(false)}>
+                      <PhoneOff className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1"><Users className="h-3 w-3" /> Property Manager + You</span>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="sm" className="text-xs gap-1 h-7"><ExternalLink className="h-3 w-3" /> Open in Zoom</Button>
+                      <Button variant="ghost" size="sm" className="text-xs gap-1 h-7"><ExternalLink className="h-3 w-3" /> Open in Teams</Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {/* Virtual inspection info */}
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex items-start gap-3">
+              <Video className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-foreground">Virtual Inspections Available</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Join routine inspections remotely via Zoom or Microsoft Teams. Use your phone camera to walk through the property while your property manager reviews in real-time. All sessions can be recorded with audio & video.
+                </p>
+              </div>
+            </div>
 
             {inspections.map((insp, i) => (
               <div key={i} className="rounded-xl border border-border bg-card p-4">
@@ -226,13 +318,49 @@ const RenterPortal = () => {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">{insp.notes}</p>
-                {insp.status === "Completed" && (
-                  <Button variant="outline" size="sm" className="text-xs mt-3">
-                    <Download className="h-3 w-3 mr-1" /> View Report
-                  </Button>
-                )}
+                <div className="flex items-center gap-2 mt-3">
+                  {insp.status === "Completed" && (
+                    <>
+                      <Button variant="outline" size="sm" className="text-xs">
+                        <Download className="h-3 w-3 mr-1" /> View Report
+                      </Button>
+                      <Button variant="ghost" size="sm" className="text-xs gap-1">
+                        <PlayCircle className="h-3 w-3" /> Watch Recording
+                      </Button>
+                    </>
+                  )}
+                  {insp.status === "Scheduled" && (
+                    <Button size="sm" className="text-xs gap-1" onClick={() => setLiveOpen(true)}>
+                      <Video className="h-3 w-3" /> Join via Zoom / Teams
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
+
+            {/* Past recordings */}
+            <h3 className="text-sm font-bold text-foreground mt-6">Inspection Recordings</h3>
+            <div className="space-y-2">
+              {[
+                { date: "Jan 15, 2026", duration: "18:40", platform: "Zoom" },
+                { date: "Oct 5, 2025", duration: "25:10", platform: "Camera" },
+              ].map((rec, i) => (
+                <div key={i} className="rounded-xl border border-border bg-card p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <FileVideo className="h-4 w-4 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{rec.date} — {rec.platform}</p>
+                      <p className="text-xs text-muted-foreground">{rec.duration} · Video + Audio</p>
+                    </div>
+                  </div>
+                  <Button variant="outline" size="sm" className="text-xs h-7 gap-1">
+                    <PlayCircle className="h-3 w-3" /> Play
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
         );
 
