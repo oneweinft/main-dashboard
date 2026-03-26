@@ -113,7 +113,10 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {portalItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground">
+                  <SidebarMenuButton
+                    onClick={() => item.url !== "#" && navigate(item.url)}
+                    className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                  >
                     <item.icon className="h-4 w-4" />
                     {!collapsed && <span>{item.title}</span>}
                   </SidebarMenuButton>
