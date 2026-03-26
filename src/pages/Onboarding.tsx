@@ -4,7 +4,7 @@ import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import {
   UserPlus, Building2, Wrench, Home, CheckCircle2, Clock, FileText,
-  ChevronDown, Info, ClipboardList, Users, Briefcase
+  ChevronDown, Info, ClipboardList, Users, Briefcase, Mail, Phone, MessageSquare
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 
 const timelineSteps = [
   { label: "Pre-Onboarding", date: "Application", status: "completed" as const },
