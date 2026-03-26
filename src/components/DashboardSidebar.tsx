@@ -47,7 +47,7 @@ const mainItems = [
   { title: "Maintenance", icon: Wrench },
   { title: "Renter Onboarding", icon: UserPlus },
   { title: "Migration", icon: ArrowRightLeft },
-  { title: "AI Voice Receptionist", icon: Phone },
+  { title: "AI Voice Receptionist", icon: Phone, url: "/ai-receptionist" },
 ];
 
 const portalItems = [
