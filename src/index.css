@@ -6,52 +6,52 @@
 
 @layer base {
   :root {
-    --background: 180 10% 8%;
-    --foreground: 160 30% 90%;
+    --background: 140 20% 97%;
+    --foreground: 160 30% 15%;
 
-    --card: 180 10% 10%;
-    --card-foreground: 160 30% 90%;
+    --card: 0 0% 100%;
+    --card-foreground: 160 30% 15%;
 
-    --popover: 180 10% 10%;
-    --popover-foreground: 160 30% 90%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 30% 15%;
 
-    --primary: 160 80% 50%;
-    --primary-foreground: 180 20% 5%;
+    --primary: 152 70% 40%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 180 10% 14%;
-    --secondary-foreground: 160 30% 85%;
+    --secondary: 145 20% 93%;
+    --secondary-foreground: 160 30% 20%;
 
-    --muted: 180 10% 16%;
-    --muted-foreground: 160 20% 55%;
+    --muted: 140 15% 92%;
+    --muted-foreground: 160 10% 45%;
 
-    --accent: 160 80% 50%;
-    --accent-foreground: 180 20% 5%;
+    --accent: 152 70% 40%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 180 10% 18%;
-    --input: 180 10% 18%;
-    --ring: 160 80% 50%;
+    --border: 145 15% 88%;
+    --input: 145 15% 88%;
+    --ring: 152 70% 40%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 180 10% 6%;
-    --sidebar-foreground: 160 30% 90%;
-    --sidebar-primary: 160 80% 50%;
-    --sidebar-primary-foreground: 180 20% 5%;
-    --sidebar-accent: 180 10% 12%;
-    --sidebar-accent-foreground: 160 30% 90%;
-    --sidebar-border: 180 10% 15%;
-    --sidebar-ring: 160 80% 50%;
+    --sidebar-background: 152 30% 16%;
+    --sidebar-foreground: 140 20% 92%;
+    --sidebar-primary: 152 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 152 25% 22%;
+    --sidebar-accent-foreground: 140 20% 92%;
+    --sidebar-border: 152 20% 24%;
+    --sidebar-ring: 152 70% 50%;
 
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --info: 195 100% 55%;
+    --info: 195 100% 45%;
     --info-foreground: 0 0% 100%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(160, 80%, 50%), hsl(160, 70%, 40%));
-    --gradient-hero: linear-gradient(135deg, hsl(180, 10%, 6%), hsl(180, 10%, 12%));
+    --gradient-primary: linear-gradient(135deg, hsl(152, 70%, 40%), hsl(152, 60%, 32%));
+    --gradient-hero: linear-gradient(135deg, hsl(140, 20%, 97%), hsl(145, 20%, 93%));
 
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
