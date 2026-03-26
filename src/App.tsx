@@ -21,6 +21,7 @@ import Tasks from "./pages/Tasks.tsx";
 import Contacts from "./pages/Contacts.tsx";
 import Integrations from "./pages/Integrations.tsx";
 import SOC2Checklist from "./pages/SOC2Checklist.tsx";
+import Settings from "./pages/Settings.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/integrations" element={<Integrations />} />
           <Route path="/soc2-checklist" element={<SOC2Checklist />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

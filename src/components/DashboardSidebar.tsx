@@ -57,7 +57,7 @@ const portalItems = [
 ];
 
 const bottomItems = [
-  { title: "Settings", icon: Settings },
+  { title: "Settings", icon: Settings, url: "/settings" },
   { title: "Help", icon: HelpCircle },
 ];
 
@@ -134,7 +134,10 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {bottomItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground">
+                  <SidebarMenuButton
+                    onClick={() => item.url && navigate(item.url)}
+                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                  >
                     <item.icon className="h-4 w-4" />
                     {!collapsed && <span>{item.title}</span>}
                   </SidebarMenuButton>
