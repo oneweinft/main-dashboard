@@ -9,6 +9,7 @@ import AIReceptionist from "./pages/AIReceptionist.tsx";
 import Documents from "./pages/Documents.tsx";
 import Inspections from "./pages/Inspections.tsx";
 import ServicesPortal from "./pages/ServicesPortal.tsx";
+import Compliance from "./pages/Compliance.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/documents" element={<Documents />} />
           <Route path="/inspections" element={<Inspections />} />
           <Route path="/services-portal" element={<ServicesPortal />} />
+          <Route path="/compliance" element={<Compliance />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
