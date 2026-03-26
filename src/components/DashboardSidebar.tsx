@@ -89,6 +89,7 @@ export function DashboardSidebar() {
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
+                    onClick={() => item.url && navigate(item.url)}
                     className={`text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground ${
                       item.active
                         ? "bg-sidebar-accent text-sidebar-foreground font-semibold"
