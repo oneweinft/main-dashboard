@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
-import { PortfolioCard } from "@/components/dashboard/PortfolioCard";
+import { QuickCards } from "@/components/dashboard/QuickCards";
 import { PropertiesCard } from "@/components/dashboard/PropertiesCard";
 import { ApplicationsCard } from "@/components/dashboard/ApplicationsCard";
 import { ComplianceCard } from "@/components/dashboard/ComplianceCard";
@@ -18,7 +18,7 @@ const Index = () => {
             <div className="grid gap-6 lg:grid-cols-3">
               {/* Left column */}
               <div className="lg:col-span-2 space-y-6">
-                <PortfolioCard />
+                <QuickCards />
                 <PropertiesCard />
                 <ApplicationsCard />
               </div>
