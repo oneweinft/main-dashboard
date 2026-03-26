@@ -3,6 +3,7 @@ import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { useState } from "react";
 import { Search, Download, Trash2, Eye, X } from "lucide-react";
+import FormsNotices from "@/components/documents/FormsNotices";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,7 +28,7 @@ const documents = [
 ];
 
 const Documents = () => {
-  const [activeTab, setActiveTab] = useState<"documents" | "archived">("documents");
+  const [activeTab, setActiveTab] = useState<"documents" | "archived" | "forms">("documents");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [keyword, setKeyword] = useState("");
 
@@ -128,71 +129,68 @@ const Documents = () => {
 
               {/* Tabs */}
               <div className="flex gap-1">
-                <button
-                  onClick={() => setActiveTab("documents")}
-                  className={`px-6 py-2 rounded-t-lg text-sm font-medium border border-b-0 transition-colors ${
-                    activeTab === "documents"
-                      ? "bg-card text-foreground border-border"
-                      : "bg-secondary text-muted-foreground border-transparent hover:text-foreground"
-                  }`}
-                >
-                  Documents
-                </button>
-                <button
-                  onClick={() => setActiveTab("archived")}
-                  className={`px-6 py-2 rounded-t-lg text-sm font-medium border border-b-0 transition-colors ${
-                    activeTab === "archived"
-                      ? "bg-card text-foreground border-border"
-                      : "bg-secondary text-muted-foreground border-transparent hover:text-foreground"
-                  }`}
-                >
-                  Archived
-                </button>
+                {(["documents", "archived", "forms"] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-6 py-2 rounded-t-lg text-sm font-medium border border-b-0 transition-colors ${
+                      activeTab === tab
+                        ? "bg-card text-foreground border-border"
+                        : "bg-secondary text-muted-foreground border-transparent hover:text-foreground"
+                    }`}
+                  >
+                    {tab === "forms" ? "Forms/Notices" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
               </div>
 
-              {/* Table */}
-              <div className="border border-border rounded-lg overflow-hidden">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-secondary/50">
-                      <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider w-10">
-                        <input type="checkbox" className="rounded border-border" />
-                      </th>
-                      <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date Added</th>
-                      <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Title</th>
-                      <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Category</th>
-                      <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</th>
-                      <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {documents.map((doc, i) => (
-                      <tr key={doc.id + i} className="border-t border-border hover:bg-secondary/30 transition-colors">
-                        <td className="p-3">
+              {/* Tab Content */}
+              {activeTab === "forms" ? (
+                <FormsNotices />
+              ) : (
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-secondary/50">
+                        <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider w-10">
                           <input type="checkbox" className="rounded border-border" />
-                        </td>
-                        <td className="p-3 text-sm text-muted-foreground">{doc.date}</td>
-                        <td className="p-3 text-sm text-foreground">{doc.title}</td>
-                        <td className="p-3 text-sm font-semibold text-foreground">{doc.category}</td>
-                        <td className="p-3 text-sm text-muted-foreground">{doc.user}</td>
-                        <td className="p-3">
-                          <div className="flex items-center gap-1">
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:text-primary">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:text-primary">
-                              <Download className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </td>
+                        </th>
+                        <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Date Added</th>
+                        <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Title</th>
+                        <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Category</th>
+                        <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</th>
+                        <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {documents.map((doc, i) => (
+                        <tr key={doc.id + i} className="border-t border-border hover:bg-secondary/30 transition-colors">
+                          <td className="p-3">
+                            <input type="checkbox" className="rounded border-border" />
+                          </td>
+                          <td className="p-3 text-sm text-muted-foreground">{doc.date}</td>
+                          <td className="p-3 text-sm text-foreground">{doc.title}</td>
+                          <td className="p-3 text-sm font-semibold text-foreground">{doc.category}</td>
+                          <td className="p-3 text-sm text-muted-foreground">{doc.user}</td>
+                          <td className="p-3">
+                            <div className="flex items-center gap-1">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:text-primary">
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:text-primary">
+                                <Download className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive">
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </main>
         </div>
