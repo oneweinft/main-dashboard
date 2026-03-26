@@ -396,6 +396,7 @@ const RenterPortal = () => {
                 </Card>
               ))}
             </div>
+          </div>
         );
 
       case "Financial Hub":
