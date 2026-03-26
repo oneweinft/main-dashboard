@@ -30,6 +30,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useNavigate } from "react-router-dom";
 
 const mainItems = [
   { title: "Dashboard", icon: Home, active: true },
@@ -48,10 +49,10 @@ const mainItems = [
 ];
 
 const portalItems = [
-  { title: "Renter Portal", icon: UserCircle },
-  { title: "Rental Provider Portal", icon: Briefcase },
-  { title: "Tradie Portal", icon: HardHat },
-  { title: "AI Personal Assistant", icon: Bot },
+  { title: "Renter Portal", icon: UserCircle, url: "#" },
+  { title: "Rental Provider Portal", icon: Briefcase, url: "#" },
+  { title: "Tradie Portal", icon: HardHat, url: "#" },
+  { title: "AI Personal Assistant", icon: Bot, url: "/ai-assistant" },
 ];
 
 const bottomItems = [
@@ -62,6 +63,7 @@ const bottomItems = [
 export function DashboardSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const navigate = useNavigate();
 
   return (
     <Sidebar collapsible="icon" className="border-none">
@@ -111,7 +113,10 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {portalItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground">
+                  <SidebarMenuButton
+                    onClick={() => item.url !== "#" && navigate(item.url)}
+                    className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                  >
                     <item.icon className="h-4 w-4" />
                     {!collapsed && <span>{item.title}</span>}
                   </SidebarMenuButton>
