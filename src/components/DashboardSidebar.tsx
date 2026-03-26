@@ -14,12 +14,17 @@ import {
   Settings,
   Wrench,
   HelpCircle,
+  UserCircle,
+  Briefcase,
+  HardHat,
+  Bot,
 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -39,8 +44,18 @@ const mainItems = [
   { title: "Tenancies", icon: Key },
   { title: "Financials", icon: DollarSign },
   { title: "Approvals", icon: CheckSquare },
-  { title: "Settings", icon: Settings },
   { title: "Maintenance", icon: Wrench },
+];
+
+const portalItems = [
+  { title: "Renter Portal", icon: UserCircle },
+  { title: "Rental Provider Portal", icon: Briefcase },
+  { title: "Tradie Portal", icon: HardHat },
+  { title: "AI Personal Assistant", icon: Bot },
+];
+
+const bottomItems = [
+  { title: "Settings", icon: Settings },
   { title: "Help", icon: HelpCircle },
 ];
 
@@ -63,6 +78,7 @@ export function DashboardSidebar() {
           )}
         </div>
 
+        {/* Main nav */}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -75,6 +91,43 @@ export function DashboardSidebar() {
                         : ""
                     }`}
                   >
+                    <item.icon className="h-4 w-4" />
+                    {!collapsed && <span>{item.title}</span>}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Portals */}
+        <SidebarGroup>
+          {!collapsed && (
+            <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">
+              Portals
+            </SidebarGroupLabel>
+          )}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {portalItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground">
+                    <item.icon className="h-4 w-4" />
+                    {!collapsed && <span>{item.title}</span>}
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Bottom */}
+        <SidebarGroup className="mt-auto">
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {bottomItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground">
                     <item.icon className="h-4 w-4" />
                     {!collapsed && <span>{item.title}</span>}
                   </SidebarMenuButton>
