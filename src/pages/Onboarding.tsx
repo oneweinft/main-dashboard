@@ -248,6 +248,247 @@ export default function Onboarding() {
                       </div>
                     </CardContent>
                   </Card>
+
+                  {/* Work Order Form */}
+                  <Card className="border-emerald-200">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <ClipboardList className="h-5 w-5 text-emerald-600" /> Work Order / Job Allocation
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label>Property</Label>
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Select property" /></SelectTrigger>
+                            <SelectContent>
+                              {properties.filter(p => p.workOrders > 0).map(p => (
+                                <SelectItem key={p.id} value={p.id}>{p.address}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Job Type</Label>
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Select job type" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="plumbing">Plumbing</SelectItem>
+                              <SelectItem value="electrical">Electrical</SelectItem>
+                              <SelectItem value="locksmith">Locksmith</SelectItem>
+                              <SelectItem value="cleaning">Cleaning</SelectItem>
+                              <SelectItem value="gardening">Gardening</SelectItem>
+                              <SelectItem value="general">General Maintenance</SelectItem>
+                              <SelectItem value="pest">Pest Control</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Assign To</Label>
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Select provider" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="fixit">FixIt Fast Plumbing</SelectItem>
+                              <SelectItem value="electro">ElectroPro Services</SelectItem>
+                              <SelectItem value="sparkle">Sparkle Clean Co.</SelectItem>
+                              <SelectItem value="greenthumb">GreenThumb Gardens</SelectItem>
+                              <SelectItem value="allround">All-Round Maintenance</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Priority</Label>
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Select priority" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="urgent">Urgent</SelectItem>
+                              <SelectItem value="high">High</SelectItem>
+                              <SelectItem value="medium">Medium</SelectItem>
+                              <SelectItem value="low">Low</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Scheduled Date</Label>
+                          <Input type="date" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Budget Estimate</Label>
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Select range" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="under500">Under $500</SelectItem>
+                              <SelectItem value="500-1000">$500 – $1,000</SelectItem>
+                              <SelectItem value="1000-2500">$1,000 – $2,500</SelectItem>
+                              <SelectItem value="2500-5000">$2,500 – $5,000</SelectItem>
+                              <SelectItem value="over5000">Over $5,000</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Job Description</Label>
+                        <Textarea placeholder="Describe the work required..." className="min-h-[80px]" />
+                      </div>
+                      <div className="flex justify-end pt-2">
+                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Create Work Order</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Properties with Outstanding Work Orders */}
+                  <Card className="border-emerald-200">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Building2 className="h-5 w-5 text-emerald-600" /> Properties with Outstanding Work Orders
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b text-left text-muted-foreground">
+                              <th className="pb-2 font-medium">ID</th>
+                              <th className="pb-2 font-medium">Address</th>
+                              <th className="pb-2 font-medium">Type</th>
+                              <th className="pb-2 font-medium">Work Orders</th>
+                              <th className="pb-2 font-medium">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {properties.filter(p => p.workOrders > 0).map(p => (
+                              <tr key={p.id} className="border-b last:border-0">
+                                <td className="py-3 font-mono text-xs">{p.id}</td>
+                                <td className="py-3">{p.address}</td>
+                                <td className="py-3">{p.type}</td>
+                                <td className="py-3">
+                                  <Badge className="bg-amber-100 text-amber-700 border-amber-200">{p.workOrders} outstanding</Badge>
+                                </td>
+                                <td className="py-3">
+                                  <Badge className={p.status === "Onboarding" ? "bg-amber-100 text-amber-700 border-amber-200" : "bg-emerald-100 text-emerald-700 border-emerald-200"}>
+                                    {p.status}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Email Log */}
+                  <Card className="border-emerald-200">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Mail className="h-5 w-5 text-emerald-600" /> Email Log
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {commsLog.filter(c => c.type === "email").map((c, i) => (
+                        <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div>
+                            <p className="font-medium text-sm">{c.subject}</p>
+                            <p className="text-xs text-muted-foreground">{c.from} → {c.to} · {c.date}</p>
+                          </div>
+                          <Badge variant="outline" className={
+                            c.status === "Sent" ? "border-emerald-300 text-emerald-700 bg-emerald-50" :
+                            "border-blue-300 text-blue-700 bg-blue-50"
+                          }>{c.status}</Badge>
+                        </div>
+                      ))}
+                      <Separator />
+                      <div className="pt-2 space-y-3">
+                        <Label className="font-semibold">Compose Email</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <Input placeholder="To: email@provider.com" />
+                          <Input placeholder="Subject" />
+                        </div>
+                        <Textarea placeholder="Message..." className="min-h-[80px]" />
+                        <div className="flex justify-end">
+                          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Send Email</Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Phone Log */}
+                  <Card className="border-emerald-200">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <Phone className="h-5 w-5 text-emerald-600" /> Phone Log
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {commsLog.filter(c => c.type === "phone").map((c, i) => (
+                        <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div>
+                            <p className="font-medium text-sm">{c.subject}</p>
+                            <p className="text-xs text-muted-foreground">{c.from} → {c.to} · {c.date} · Duration: {c.duration}</p>
+                          </div>
+                          <Badge variant="outline" className={
+                            c.status === "Completed" ? "border-emerald-300 text-emerald-700 bg-emerald-50" :
+                            "border-red-300 text-red-700 bg-red-50"
+                          }>{c.status}</Badge>
+                        </div>
+                      ))}
+                      <Separator />
+                      <div className="pt-2 space-y-3">
+                        <Label className="font-semibold">Log Phone Call</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <Input placeholder="Contact name" />
+                          <Input placeholder="Phone number" />
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Call outcome" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="completed">Completed</SelectItem>
+                              <SelectItem value="missed">Missed</SelectItem>
+                              <SelectItem value="voicemail">Voicemail</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Textarea placeholder="Call notes..." className="min-h-[60px]" />
+                        <div className="flex justify-end">
+                          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Log Call</Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Communications History */}
+                  <Card className="border-emerald-200">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <MessageSquare className="h-5 w-5 text-emerald-600" /> Communications History
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {commsLog.map((c, i) => (
+                        <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div className="flex items-center gap-3">
+                            <div className="h-8 w-8 rounded bg-emerald-100 flex items-center justify-center shrink-0">
+                              {c.type === "email" ? <Mail className="h-4 w-4 text-emerald-600" /> :
+                               c.type === "phone" ? <Phone className="h-4 w-4 text-emerald-600" /> :
+                               <MessageSquare className="h-4 w-4 text-emerald-600" />}
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{c.subject}</p>
+                              <p className="text-xs text-muted-foreground">{c.from} → {c.to} · {c.date}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs capitalize">{c.type}</Badge>
+                            <Badge variant="outline" className={
+                              c.status === "Sent" || c.status === "Completed" || c.status === "Delivered" ? "border-emerald-300 text-emerald-700 bg-emerald-50" :
+                              c.status === "Received" ? "border-blue-300 text-blue-700 bg-blue-50" :
+                              "border-red-300 text-red-700 bg-red-50"
+                            }>{c.status}</Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
                 </TabsContent>
 
                 {/* Rental Provider Tab */}
