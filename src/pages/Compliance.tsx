@@ -43,7 +43,12 @@ const Compliance = () => {
           <DashboardHeader />
           <main className="flex-1 overflow-auto p-6">
             <div className="space-y-6">
-              <h1 className="text-2xl font-bold text-primary italic">Compliance</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-primary italic">Compliance</h1>
+                <Button onClick={() => navigate("/soc2-checklist")} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
+                  <Shield className="h-4 w-4" /> SOC 2 Checklist
+                </Button>
+              </div>
 
               {/* Tabs */}
               <div className="flex flex-wrap gap-2">
