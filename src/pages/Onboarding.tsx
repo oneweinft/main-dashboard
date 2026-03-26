@@ -407,6 +407,8 @@ export default function Onboarding() {
                   </CardContent>
                 </Card>
               </div>
+              </>
+              )}
 
               {/* General Information */}
               <Card className="border-emerald-200">
