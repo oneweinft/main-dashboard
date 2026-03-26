@@ -36,7 +36,7 @@ const mainItems = [
   { title: "Dashboard", icon: Home, active: true, url: "/" },
   { title: "Tasks", icon: Clock },
   { title: "Compliance", icon: Shield, url: "/compliance" },
-  { title: "Reports", icon: BarChart3 },
+  { title: "Reports", icon: BarChart3, url: "/reports" },
   { title: "Inspections", icon: ListChecks, url: "/inspections" },
   { title: "Contacts", icon: Users },
   { title: "Integrations", icon: Link2 },
