@@ -11,6 +11,7 @@ import {
   Key,
   DollarSign,
   CheckSquare,
+  Trash2,
   Settings,
   Wrench,
   HelpCircle,
@@ -18,6 +19,8 @@ import {
   Briefcase,
   HardHat,
   Bot,
+  UserPlus,
+  ArrowRightLeft,
 } from "lucide-react";
 import {
   Sidebar,
