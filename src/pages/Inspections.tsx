@@ -249,8 +249,10 @@ const Inspections = () => {
             </div>
 
             <Tabs value={tab} onValueChange={setTab}>
-              <TabsList>
+              <TabsList className="flex-wrap">
                 <TabsTrigger value="schedule">Schedule</TabsTrigger>
+                <TabsTrigger value="scripts">Scripts</TabsTrigger>
+                <TabsTrigger value="ai-digest">AI Digest</TabsTrigger>
                 <TabsTrigger value="recordings">Recordings ({pastRecordings.length})</TabsTrigger>
                 <TabsTrigger value="map">Map View</TabsTrigger>
               </TabsList>
