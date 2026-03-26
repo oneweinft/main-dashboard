@@ -2,10 +2,11 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 const complianceTabs = [
   { id: "pools", label: "Pools" },
@@ -29,6 +30,7 @@ const poolData = [
 
 const Compliance = () => {
   const [activeTab, setActiveTab] = useState("pools");
+  const navigate = useNavigate();
 
   return (
     <SidebarProvider>
@@ -38,7 +40,12 @@ const Compliance = () => {
           <DashboardHeader />
           <main className="flex-1 overflow-auto p-6">
             <div className="space-y-6">
-              <h1 className="text-2xl font-bold text-primary italic">Compliance</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-primary italic">Compliance</h1>
+                <Button onClick={() => navigate("/soc2-checklist")} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
+                  <Shield className="h-4 w-4" /> SOC 2 Checklist
+                </Button>
+              </div>
 
               {/* Tabs */}
               <div className="flex flex-wrap gap-2">
