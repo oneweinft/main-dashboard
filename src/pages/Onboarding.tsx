@@ -156,6 +156,19 @@ export default function Onboarding() {
                             </SelectContent>
                           </Select>
                         </div>
+                        <div className="space-y-2">
+                          <Label>Number of Renters</Label>
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Select number" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1</SelectItem>
+                              <SelectItem value="2">2</SelectItem>
+                              <SelectItem value="3">3</SelectItem>
+                              <SelectItem value="4">4</SelectItem>
+                              <SelectItem value="5">5+</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                       <div className="flex justify-end pt-2">
                         <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Start Onboarding</Button>
