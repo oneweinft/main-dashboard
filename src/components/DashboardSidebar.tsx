@@ -35,7 +35,7 @@ import { useNavigate } from "react-router-dom";
 const mainItems = [
   { title: "Dashboard", icon: Home, active: true, url: "/" },
   { title: "Tasks", icon: Clock },
-  { title: "Compliance", icon: Shield },
+  { title: "Compliance", icon: Shield, url: "/compliance" },
   { title: "Reports", icon: BarChart3 },
   { title: "Inspections", icon: ListChecks, url: "/inspections" },
   { title: "Contacts", icon: Users },
