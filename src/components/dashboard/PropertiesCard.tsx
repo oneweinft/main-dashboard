@@ -18,14 +18,14 @@ export function PropertiesCard() {
 
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-primary text-base font-bold">Properties</CardTitle>
-          <div className="flex gap-1">
+      <CardHeader className="pb-2 px-3 sm:px-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <CardTitle className="text-primary text-sm sm:text-base font-bold">Properties</CardTitle>
+          <div className="flex gap-1 flex-wrap">
             {periods.map((p) => (
               <button
                 key={p}
-                className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
+                className={`rounded-full px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-xs font-medium transition-colors ${
                   p === "1m"
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-muted"
@@ -37,19 +37,19 @@ export function PropertiesCard() {
           </div>
         </div>
         <div className="flex items-baseline gap-2 mt-1">
-          <span className="text-2xl font-extrabold text-foreground">{total}</span>
-          <span className="text-sm text-muted-foreground">Total Active</span>
+          <span className="text-xl sm:text-2xl font-extrabold text-foreground">{total}</span>
+          <span className="text-xs sm:text-sm text-muted-foreground">Total Active</span>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="h-[140px] w-full">
+      <CardContent className="px-2 sm:px-6">
+        <div className="h-[120px] sm:h-[140px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data}>
               <XAxis
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
               />
               <YAxis hide domain={["dataMin - 2", "dataMax + 2"]} />
               <Tooltip
