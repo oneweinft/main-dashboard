@@ -40,7 +40,7 @@ const mainItems = [
   { title: "Reports", icon: BarChart3, url: "/reports" },
   { title: "Inspections", icon: ListChecks, url: "/inspections" },
   { title: "Contacts", icon: Users, url: "/contacts" },
-  { title: "Integrations", icon: Link2 },
+  { title: "Integrations", icon: Link2, url: "/integrations" },
   { title: "Documents", icon: FileText, url: "/documents" },
   { title: "Properties", icon: Building2 },
   { title: "Tenancies", icon: Key },
