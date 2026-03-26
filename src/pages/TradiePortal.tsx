@@ -226,9 +226,45 @@ const TradiePortal = () => {
                   <label className="text-xs text-muted-foreground">Description</label>
                   <Textarea placeholder="Describe the work required..." className="min-h-[80px]" />
                 </div>
+                {/* Photo/Video Upload for Work Order */}
+                <div className="space-y-2">
+                  <label className="text-xs text-muted-foreground">Attach Photos / Videos</label>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Select value={uploadTag} onValueChange={(v: "before" | "after" | "general") => setUploadTag(v)}>
+                      <SelectTrigger className="w-32 h-8 text-xs"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="before">Before</SelectItem>
+                        <SelectItem value="after">After</SelectItem>
+                        <SelectItem value="general">General</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <input ref={woFileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={(e) => handleFileSelect(e, setWoUploadedFiles)} />
+                    <Button variant="outline" size="sm" className="text-xs gap-1 h-8" onClick={() => woFileInputRef.current?.click()}>
+                      <Camera className="h-3 w-3" /> Take Photo
+                    </Button>
+                    <Button variant="outline" size="sm" className="text-xs gap-1 h-8" onClick={() => woFileInputRef.current?.click()}>
+                      <Upload className="h-3 w-3" /> Upload Files
+                    </Button>
+                  </div>
+                  {woUploadedFiles.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {woUploadedFiles.map((f, i) => (
+                        <div key={i} className="flex items-center gap-1.5 rounded-md border border-border bg-muted px-2 py-1">
+                          {f.type === "video" ? <Video className="h-3 w-3 text-primary" /> : <Image className="h-3 w-3 text-primary" />}
+                          <span className="text-xs text-foreground truncate max-w-[120px]">{f.name}</span>
+                          <Badge variant="outline" className="text-[9px]">{uploadTag}</Badge>
+                          <span className="text-[10px] text-muted-foreground">{f.size}</span>
+                          <button onClick={() => setWoUploadedFiles((prev) => prev.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-destructive">
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <div className="flex gap-2">
-                  <Button size="sm">Submit Work Order</Button>
-                  <Button variant="outline" size="sm" onClick={() => setShowWorkOrderForm(false)}>Cancel</Button>
+                  <Button size="sm" onClick={() => { setShowWorkOrderForm(false); setWoUploadedFiles([]); }}>Submit Work Order</Button>
+                  <Button variant="outline" size="sm" onClick={() => { setShowWorkOrderForm(false); setWoUploadedFiles([]); }}>Cancel</Button>
                 </div>
               </div>
             )}
