@@ -35,14 +35,14 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const mainItems = [
-  { title: "Dashboard", icon: Home, active: true },
+  { title: "Dashboard", icon: Home, active: true, url: "/" },
   { title: "Tasks", icon: Clock },
   { title: "Compliance", icon: Shield },
   { title: "Reports", icon: BarChart3 },
-  { title: "Inspections", icon: ListChecks },
+  { title: "Inspections", icon: ListChecks, url: "/inspections" },
   { title: "Contacts", icon: Users },
   { title: "Integrations", icon: Link2 },
-  { title: "Documents", icon: FileText },
+  { title: "Documents", icon: FileText, url: "/documents" },
   { title: "Properties", icon: Building2 },
   { title: "Tenancies", icon: Key },
   { title: "Financials", icon: DollarSign },
