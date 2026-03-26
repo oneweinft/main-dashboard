@@ -86,6 +86,7 @@ const commsLog = [
 export default function Onboarding() {
   const [activeTab, setActiveTab] = useState("renter");
   const [selectedProperty, setSelectedProperty] = useState("");
+  const [rentalProviderCount, setRentalProviderCount] = useState(1);
 
   return (
     <SidebarProvider>
