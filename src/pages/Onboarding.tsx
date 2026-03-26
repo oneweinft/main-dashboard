@@ -314,6 +314,8 @@ export default function Onboarding() {
                 </TabsContent>
               </Tabs>
 
+              {activeTab !== "service" && (
+              <>
               {/* Property Assignment */}
               <Card className="border-emerald-200">
                 <CardHeader>
