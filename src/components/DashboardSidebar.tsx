@@ -44,7 +44,7 @@ const mainItems = [
   { title: "Properties", icon: Building2 },
   { title: "Tenancies", icon: Key },
   { title: "Financials", icon: DollarSign },
-  { title: "Maintenance", icon: Wrench },
+  { title: "Maintenance", icon: Wrench, url: "/maintenance" },
   { title: "Renter Onboarding", icon: UserPlus },
   { title: "Migration", icon: ArrowRightLeft },
   { title: "AI Voice Receptionist", icon: Phone, url: "/ai-receptionist" },
