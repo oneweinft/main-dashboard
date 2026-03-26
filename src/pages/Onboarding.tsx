@@ -40,9 +40,9 @@ const guides = [
 ];
 
 const properties = [
-  { id: "P001", address: "12 Collins St, Melbourne VIC 3000", type: "Apartment", status: "Active" },
-  { id: "P002", address: "45 George St, Sydney NSW 2000", type: "House", status: "Onboarding" },
-  { id: "P003", address: "8 Adelaide Tce, Perth WA 6000", type: "Unit", status: "Active" },
+  { id: "P001", address: "12 Collins St, Melbourne VIC 3000", type: "Apartment", bedrooms: 2, bathrooms: 1, parking: 1, rent: "$450/wk", status: "Active" },
+  { id: "P002", address: "45 George St, Sydney NSW 2000", type: "House", bedrooms: 3, bathrooms: 2, parking: 2, rent: "$680/wk", status: "Onboarding" },
+  { id: "P003", address: "8 Adelaide Tce, Perth WA 6000", type: "Unit", bedrooms: 1, bathrooms: 1, parking: 1, rent: "$350/wk", status: "Active" },
 ];
 
 export default function Onboarding() {
