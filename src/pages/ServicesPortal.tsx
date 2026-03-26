@@ -83,6 +83,7 @@ const ServicesPortal = () => {
                       onClick={() => {
                         if (portal.title === "Renter Portal") navigate("/renter-portal");
                         if (portal.title === "Rental Provider Portal") navigate("/rental-provider-portal");
+                        if (portal.title === "Tradie Portal") navigate("/tradie-portal");
                       }}
                     >
                       Open Portal

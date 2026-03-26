@@ -14,6 +14,7 @@ import Reports from "./pages/Reports.tsx";
 import Maintenance from "./pages/Maintenance.tsx";
 import RenterPortal from "./pages/RenterPortal.tsx";
 import RentalProviderPortal from "./pages/RentalProviderPortal.tsx";
+import TradiePortal from "./pages/TradiePortal.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/maintenance" element={<Maintenance />} />
           <Route path="/renter-portal" element={<RenterPortal />} />
           <Route path="/rental-provider-portal" element={<RentalProviderPortal />} />
+          <Route path="/tradie-portal" element={<TradiePortal />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
