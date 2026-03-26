@@ -39,7 +39,7 @@ const mainItems = [
   { title: "Compliance", icon: Shield, url: "/compliance" },
   { title: "Reports", icon: BarChart3, url: "/reports" },
   { title: "Inspections", icon: ListChecks, url: "/inspections" },
-  { title: "Contacts", icon: Users },
+  { title: "Contacts", icon: Users, url: "/contacts" },
   { title: "Integrations", icon: Link2 },
   { title: "Documents", icon: FileText, url: "/documents" },
   { title: "Properties", icon: Building2 },

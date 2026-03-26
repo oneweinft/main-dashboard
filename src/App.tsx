@@ -45,6 +45,7 @@ const App = () => (
           <Route path="/migration" element={<Migration />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/tasks" element={<Tasks />} />
+          <Route path="/contacts" element={<Contacts />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
