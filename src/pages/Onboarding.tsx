@@ -37,12 +37,17 @@ const guides = [
   { title: "Rental Provider Handbook", description: "Obligations, insurance, compliance requirements" },
   { title: "Service Provider Setup", description: "Portal access, job acceptance workflow, invoicing" },
   { title: "Emergency Contacts & Procedures", description: "After-hours maintenance, fire safety, evacuation" },
+  { title: "Consumer Affairs Guide 1", description: "Renting a home – your rights and responsibilities" },
+  { title: "Consumer Affairs Guide 2", description: "Bonds – lodgement, claims and disputes" },
+  { title: "Consumer Affairs Guide 3", description: "Repairs and maintenance – urgent and non-urgent" },
+  { title: "Consumer Affairs Guide 4", description: "Rent increases – notice periods and disputes" },
+  { title: "Consumer Affairs Guide 5", description: "Ending a tenancy – notice, vacating and bond return" },
 ];
 
 const properties = [
-  { id: "P001", address: "12 Collins St, Melbourne VIC 3000", type: "Apartment", status: "Active" },
-  { id: "P002", address: "45 George St, Sydney NSW 2000", type: "House", status: "Onboarding" },
-  { id: "P003", address: "8 Adelaide Tce, Perth WA 6000", type: "Unit", status: "Active" },
+  { id: "P001", address: "12 Collins St, Melbourne VIC 3000", type: "Apartment", bedrooms: 2, bathrooms: 1, parking: 1, rent: "$450/wk", status: "Active" },
+  { id: "P002", address: "45 George St, Sydney NSW 2000", type: "House", bedrooms: 3, bathrooms: 2, parking: 2, rent: "$680/wk", status: "Onboarding" },
+  { id: "P003", address: "8 Adelaide Tce, Perth WA 6000", type: "Unit", bedrooms: 1, bathrooms: 1, parking: 1, rent: "$350/wk", status: "Active" },
 ];
 
 export default function Onboarding() {
@@ -153,6 +158,19 @@ export default function Onboarding() {
                               <SelectItem value="6">6 Months</SelectItem>
                               <SelectItem value="12">12 Months</SelectItem>
                               <SelectItem value="24">24 Months</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Number of Renters</Label>
+                          <Select>
+                            <SelectTrigger><SelectValue placeholder="Select number" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1</SelectItem>
+                              <SelectItem value="2">2</SelectItem>
+                              <SelectItem value="3">3</SelectItem>
+                              <SelectItem value="4">4</SelectItem>
+                              <SelectItem value="5">5+</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -302,6 +320,8 @@ export default function Onboarding() {
                           <th className="pb-2 font-medium">ID</th>
                           <th className="pb-2 font-medium">Address</th>
                           <th className="pb-2 font-medium">Type</th>
+                          <th className="pb-2 font-medium">Bed/Bath/Park</th>
+                          <th className="pb-2 font-medium">Rent</th>
                           <th className="pb-2 font-medium">Status</th>
                         </tr>
                       </thead>
@@ -311,6 +331,8 @@ export default function Onboarding() {
                             <td className="py-3 font-mono text-xs">{p.id}</td>
                             <td className="py-3">{p.address}</td>
                             <td className="py-3">{p.type}</td>
+                            <td className="py-3">{p.bedrooms}/{p.bathrooms}/{p.parking}</td>
+                            <td className="py-3 font-medium">{p.rent}</td>
                             <td className="py-3">
                               <Badge variant={p.status === "Active" ? "default" : "secondary"}
                                 className={p.status === "Onboarding" ? "bg-amber-100 text-amber-700 border-amber-200" : "bg-emerald-100 text-emerald-700 border-emerald-200"}>
