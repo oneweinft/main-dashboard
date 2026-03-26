@@ -5,6 +5,7 @@ import { UserCircle, Briefcase, HardHat, MessageSquare, Star, Clock, CheckCircle
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const portals = [
   {
@@ -42,6 +43,7 @@ const recentActivity = [
 ];
 
 const ServicesPortal = () => {
+  const navigate = useNavigate();
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -82,7 +84,13 @@ const ServicesPortal = () => {
                         <p className="text-xs text-muted-foreground">Resolved</p>
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Button
+                      variant="outline"
+                      className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                      onClick={() => {
+                        if (portal.title === "Renter Portal") navigate("/renter-portal");
+                      }}
+                    >
                       Open Portal
                     </Button>
                   </CardContent>
