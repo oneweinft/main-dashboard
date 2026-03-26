@@ -15,6 +15,7 @@ import Maintenance from "./pages/Maintenance.tsx";
 import RenterPortal from "./pages/RenterPortal.tsx";
 import RentalProviderPortal from "./pages/RentalProviderPortal.tsx";
 import TradiePortal from "./pages/TradiePortal.tsx";
+import Migration from "./pages/Migration.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
