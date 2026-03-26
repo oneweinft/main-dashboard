@@ -37,8 +37,8 @@ export function ComplianceCard() {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-6">
-          <DonutChart value={273} max={300} label="Smoke Alarm" sublabel="No Certificate" color="hsl(262, 72%, 55%)" />
-          <DonutChart value={2} max={300} label="Pool Safety" sublabel="Exp. Certificate" color="hsl(145, 63%, 49%)" />
+          <DonutChart value={273} max={300} label="Smoke Alarm" sublabel="No Certificate" color="hsl(160, 80%, 50%)" />
+          <DonutChart value={2} max={300} label="Pool Safety" sublabel="Exp. Certificate" color="hsl(195, 100%, 55%)" />
         </div>
       </CardContent>
     </Card>

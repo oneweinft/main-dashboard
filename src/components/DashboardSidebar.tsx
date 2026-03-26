@@ -18,6 +18,7 @@ import {
   UserPlus,
   ArrowRightLeft,
   Phone,
+  Sparkles,
 } from "lucide-react";
 import {
   Sidebar,
@@ -70,8 +71,8 @@ export function DashboardSidebar() {
       <SidebarContent className="bg-sidebar pt-4">
         {/* Logo */}
         <div className="flex items-center gap-2 px-4 pb-4">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary">
-            <Building2 className="h-5 w-5 text-sidebar-primary-foreground" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary">
+            <Sparkles className="h-5 w-5 text-primary-foreground" />
           </div>
           {!collapsed && (
             <span className="text-lg font-bold text-sidebar-foreground">
@@ -88,7 +89,7 @@ export function DashboardSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     onClick={() => item.url && navigate(item.url)}
-                    className={`text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground ${
+                    className={`text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground ${
                       item.active
                         ? "bg-sidebar-accent text-sidebar-foreground font-semibold"
                         : ""
@@ -106,7 +107,7 @@ export function DashboardSidebar() {
         {/* Portals */}
         <SidebarGroup>
           {!collapsed && (
-            <SidebarGroupLabel className="text-sidebar-foreground/50 text-xs uppercase tracking-wider">
+            <SidebarGroupLabel className="text-sidebar-foreground/40 text-xs uppercase tracking-wider">
               Portals
             </SidebarGroupLabel>
           )}
@@ -116,7 +117,7 @@ export function DashboardSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     onClick={() => item.url !== "#" && navigate(item.url)}
-                    className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                    className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                   >
                     <item.icon className="h-4 w-4" />
                     {!collapsed && <span>{item.title}</span>}
@@ -133,7 +134,7 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {bottomItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground">
+                  <SidebarMenuButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground">
                     <item.icon className="h-4 w-4" />
                     {!collapsed && <span>{item.title}</span>}
                   </SidebarMenuButton>

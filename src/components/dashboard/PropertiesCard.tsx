@@ -23,7 +23,7 @@ export function PropertiesCard() {
                 key={p}
                 className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors ${
                   p === "1m"
-                    ? "bg-accent text-accent-foreground"
+                    ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-muted"
                 }`}
               >
@@ -45,18 +45,19 @@ export function PropertiesCard() {
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 11, fill: "hsl(260, 10%, 50%)" }}
+                tick={{ fontSize: 11, fill: "hsl(160, 20%, 55%)" }}
               />
               <YAxis hide domain={["dataMin - 30", "dataMax + 10"]} />
               <Tooltip
                 contentStyle={{
                   borderRadius: 8,
-                  border: "none",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  border: "1px solid hsl(180, 10%, 18%)",
+                  background: "hsl(180, 10%, 10%)",
+                  color: "hsl(160, 30%, 90%)",
                   fontSize: 12,
                 }}
               />
-              <Bar dataKey="properties" fill="hsl(262, 72%, 55%)" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="properties" fill="hsl(160, 80%, 50%)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
