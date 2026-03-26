@@ -63,6 +63,7 @@ const bottomItems = [
 export function DashboardSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const navigate = useNavigate();
 
   return (
     <Sidebar collapsible="icon" className="border-none">
