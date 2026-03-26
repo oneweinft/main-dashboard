@@ -576,6 +576,55 @@ export default function Onboarding() {
                       </div>
                     </CardContent>
                   </Card>
+
+                  {/* Rental Provider Documents */}
+                  <Card className="border-emerald-200">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <ClipboardList className="h-5 w-5 text-emerald-600" /> Rental Provider Documents
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {rentalProviderDocs.map((doc, i) => (
+                        <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div>
+                            <p className="font-medium text-sm">{doc.name}</p>
+                            <p className="text-xs text-muted-foreground">{doc.date}</p>
+                          </div>
+                          <Badge variant="outline" className={
+                            doc.status === "Completed" ? "border-emerald-300 text-emerald-700 bg-emerald-50" :
+                            doc.status === "Pending Signature" ? "border-amber-300 text-amber-700 bg-amber-50" :
+                            doc.status === "In Progress" ? "border-blue-300 text-blue-700 bg-blue-50" :
+                            "border-gray-300 text-gray-600"
+                          }>
+                            {doc.status}
+                          </Badge>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+
+                  {/* Rental Provider Resources */}
+                  <Card className="border-emerald-200">
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-emerald-600" /> Rental Provider Resources
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {rentalProviderGuides.map((guide, i) => (
+                        <div key={i} className="flex items-start gap-3 py-2 border-b last:border-0">
+                          <div className="h-8 w-8 rounded bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
+                            <Info className="h-4 w-4 text-emerald-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm">{guide.title}</p>
+                            <p className="text-xs text-muted-foreground">{guide.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
                 </TabsContent>
               </Tabs>
 
