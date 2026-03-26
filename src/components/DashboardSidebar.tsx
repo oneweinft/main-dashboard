@@ -13,9 +13,7 @@ import {
   Settings,
   Wrench,
   HelpCircle,
-  UserCircle,
   Briefcase,
-  HardHat,
   Bot,
   UserPlus,
   ArrowRightLeft,
@@ -35,14 +33,14 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const mainItems = [
-  { title: "Dashboard", icon: Home, active: true },
+  { title: "Dashboard", icon: Home, active: true, url: "/" },
   { title: "Tasks", icon: Clock },
   { title: "Compliance", icon: Shield },
   { title: "Reports", icon: BarChart3 },
-  { title: "Inspections", icon: ListChecks },
+  { title: "Inspections", icon: ListChecks, url: "/inspections" },
   { title: "Contacts", icon: Users },
   { title: "Integrations", icon: Link2 },
-  { title: "Documents", icon: FileText },
+  { title: "Documents", icon: FileText, url: "/documents" },
   { title: "Properties", icon: Building2 },
   { title: "Tenancies", icon: Key },
   { title: "Financials", icon: DollarSign },
@@ -53,9 +51,7 @@ const mainItems = [
 ];
 
 const portalItems = [
-  { title: "Renter Portal", icon: UserCircle, url: "#" },
-  { title: "Rental Provider Portal", icon: Briefcase, url: "#" },
-  { title: "Tradie Portal", icon: HardHat, url: "#" },
+  { title: "Services Portal", icon: Briefcase, url: "/services-portal" },
   { title: "AI Personal Assistant", icon: Bot, url: "/ai-assistant" },
 ];
 
@@ -91,6 +87,7 @@ export function DashboardSidebar() {
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
+                    onClick={() => item.url && navigate(item.url)}
                     className={`text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-foreground ${
                       item.active
                         ? "bg-sidebar-accent text-sidebar-foreground font-semibold"
