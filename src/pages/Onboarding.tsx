@@ -45,6 +45,30 @@ const guides = [
   { title: "Consumer Affairs Guide 5", description: "Ending a tenancy – notice, vacating and bond return" },
 ];
 
+const rentalProviderDocs = [
+  { name: "Management Authority Agreement", status: "Pending Signature", date: "20 Mar 2026" },
+  { name: "Owner Instructions Form", status: "Completed", date: "15 Mar 2026" },
+  { name: "Residential Lease Agreement", status: "In Progress", date: "22 Mar 2026" },
+  { name: "Rental Agreement (Periodic)", status: "Pending", date: "—" },
+  { name: "Landlord Insurance Certificate", status: "Completed", date: "14 Mar 2026" },
+  { name: "Property Condition Report", status: "Completed", date: "14 Mar 2026" },
+  { name: "Smoke Alarm Compliance Certificate", status: "Completed", date: "12 Mar 2026" },
+  { name: "Pool Safety Certificate", status: "Pending", date: "—" },
+  { name: "Electrical Safety Check", status: "In Progress", date: "21 Mar 2026" },
+  { name: "Disbursement Authority", status: "Completed", date: "16 Mar 2026" },
+];
+
+const rentalProviderGuides = [
+  { title: "Management Authority Guide", description: "Understanding your agreement, fees, and obligations" },
+  { title: "Owner Obligations & Compliance", description: "Minimum standards, safety, and legal requirements" },
+  { title: "Insurance Requirements", description: "Landlord insurance, public liability, and building cover" },
+  { title: "Rental Income & Tax Guide", description: "Deductions, depreciation, and ATO reporting" },
+  { title: "Maintenance & Repairs Policy", description: "Approval thresholds, emergency works, and preferred tradies" },
+  { title: "Lease & Tenancy Overview", description: "Fixed vs periodic, rent reviews, and lease renewals" },
+  { title: "Inspection & Compliance Calendar", description: "Routine inspections, safety checks, and key dates" },
+  { title: "Dispute Resolution Process", description: "VCAT/tribunal processes, mediation, and escalation" },
+];
+
 const properties = [
   { id: "P001", address: "12 Collins St, Melbourne VIC 3000", type: "Apartment", bedrooms: 2, bathrooms: 1, parking: 1, rent: "$450/wk", status: "Active", workOrders: 0 },
   { id: "P002", address: "45 George St, Sydney NSW 2000", type: "House", bedrooms: 3, bathrooms: 2, parking: 2, rent: "$680/wk", status: "Onboarding", workOrders: 3 },
