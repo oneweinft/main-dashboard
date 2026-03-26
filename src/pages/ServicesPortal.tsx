@@ -84,7 +84,13 @@ const ServicesPortal = () => {
                         <p className="text-xs text-muted-foreground">Resolved</p>
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <Button
+                      variant="outline"
+                      className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                      onClick={() => {
+                        if (portal.title === "Renter Portal") navigate("/renter-portal");
+                      }}
+                    >
                       Open Portal
                     </Button>
                   </CardContent>
