@@ -579,7 +579,7 @@ export default function Onboarding() {
                 </TabsContent>
               </Tabs>
 
-              {activeTab !== "service" && (
+              {activeTab === "renter" && (
               <>
               {/* Property Assignment */}
               <Card className="border-emerald-200">
