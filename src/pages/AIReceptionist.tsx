@@ -234,6 +234,16 @@ export default function AIReceptionist() {
           <header className="flex h-14 items-center justify-between border-b border-border px-4">
             <h1 className="text-lg font-bold text-foreground">AI Voice Receptionist</h1>
             <div className="flex items-center gap-2">
+              <a
+                href="https://vapi.ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+              >
+                <Zap className="h-3.5 w-3.5" />
+                Powered by Vapi
+                <ExternalLink className="h-3 w-3" />
+              </a>
               <Button variant="ghost" size="icon" className="relative text-muted-foreground">
                 <Bell className="h-4 w-4" />
                 <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive" />
