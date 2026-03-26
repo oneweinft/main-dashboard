@@ -1,16 +1,38 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/DashboardSidebar";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { PortfolioCard } from "@/components/dashboard/PortfolioCard";
+import { PropertiesCard } from "@/components/dashboard/PropertiesCard";
+import { ApplicationsCard } from "@/components/dashboard/ApplicationsCard";
+import { ComplianceCard } from "@/components/dashboard/ComplianceCard";
+import { ArrearsCard } from "@/components/dashboard/ArrearsCard";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
-    </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <DashboardSidebar />
+        <div className="flex-1 flex flex-col">
+          <DashboardHeader />
+          <main className="flex-1 overflow-auto p-6">
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Left column */}
+              <div className="lg:col-span-2 space-y-6">
+                <PortfolioCard />
+                <PropertiesCard />
+                <ApplicationsCard />
+              </div>
+              {/* Right column */}
+              <div className="space-y-6">
+                <ComplianceCard />
+                <ArrearsCard />
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 };
-
-const Index = PlaceholderIndex;
 
 export default Index;
