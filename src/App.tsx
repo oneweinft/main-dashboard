@@ -22,6 +22,8 @@ import Contacts from "./pages/Contacts.tsx";
 import Integrations from "./pages/Integrations.tsx";
 import SOC2Checklist from "./pages/SOC2Checklist.tsx";
 import Settings from "./pages/Settings.tsx";
+import Properties from "./pages/Properties.tsx";
+import Financials from "./pages/Financials.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
