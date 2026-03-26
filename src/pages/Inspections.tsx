@@ -355,6 +355,16 @@ const Inspections = () => {
                 </div>
               </TabsContent>
 
+              {/* Scripts Tab */}
+              <TabsContent value="scripts" className="mt-4">
+                <InspectionScriptBuilder />
+              </TabsContent>
+
+              {/* AI Digest Tab */}
+              <TabsContent value="ai-digest" className="mt-4">
+                <AIInspectionDigest />
+              </TabsContent>
+
               {/* Recordings Tab */}
               <TabsContent value="recordings" className="space-y-4 mt-4">
                 <div className="grid gap-3">
