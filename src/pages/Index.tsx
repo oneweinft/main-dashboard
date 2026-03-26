@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
-import { PortfolioCard } from "@/components/dashboard/PortfolioCard";
+import { QuickCards } from "@/components/dashboard/QuickCards";
 import { PropertiesCard } from "@/components/dashboard/PropertiesCard";
 import { ApplicationsCard } from "@/components/dashboard/ApplicationsCard";
 import { ComplianceCard } from "@/components/dashboard/ComplianceCard";
