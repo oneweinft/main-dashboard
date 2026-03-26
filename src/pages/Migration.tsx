@@ -1,21 +1,17 @@
-import { useState } from "react";
-import { Upload, Code, Download, FileArchive, FileText, FileSpreadsheet, Shield, Brain, Zap, ArrowLeft } from "lucide-react";
+import { useState, useRef } from "react";
+import { Upload, Code, Download, FileArchive, FileText, FileSpreadsheet, Shield, Brain, Zap, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useData } from "@/context/DataContext";
+import { useToast } from "@/hooks/use-toast";
 
 const stats = [
   { value: "120K+", label: "Properties Migrated" },
   { value: "1,800+", label: "Agents Onboarded" },
   { value: "99.9%", label: "Uptime SLA" },
   { value: "<30s", label: "Avg. Process Time" },
-];
-
-const uploadTypes = [
-  { icon: FileArchive, title: "ZIP Archive", desc: "Drag & drop ZIP files here" },
-  { icon: FileText, title: "PDF Documents", desc: "Drag & drop PDF files here" },
-  { icon: FileSpreadsheet, title: "CSV Spreadsheet", desc: "Drag & drop CSV files here" },
 ];
 
 const features = [
@@ -30,12 +26,109 @@ const tabs = [
   { id: "export", label: "Agent Export", icon: Download },
 ];
 
+function parseCSV(text: string): Record<string, string>[] {
+  const lines = text.trim().split("\n");
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(",").map((h) => h.trim().toLowerCase().replace(/[^a-z0-9]/g, "_"));
+  return lines.slice(1).map((line) => {
+    const vals = line.split(",").map((v) => v.trim());
+    const row: Record<string, string> = {};
+    headers.forEach((h, i) => { row[h] = vals[i] || ""; });
+    return row;
+  });
+}
+
 const Migration = () => {
   const [activeTab, setActiveTab] = useState("upload");
+  const [importResult, setImportResult] = useState<{ type: string; count: number } | null>(null);
   const navigate = useNavigate();
+  const { addProperties, addContacts, addTransactions } = useData();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFormat, setSelectedFormat] = useState<string | null>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      const rows = parseCSV(text);
+      if (rows.length === 0) {
+        toast({ title: "Import Failed", description: "No data rows found in file.", variant: "destructive" });
+        return;
+      }
+
+      // Auto-detect data type from headers
+      const headers = Object.keys(rows[0]);
+      const hasAddress = headers.some((h) => h.includes("address"));
+      const hasAmount = headers.some((h) => h.includes("amount"));
+      const hasEmail = headers.some((h) => h.includes("email"));
+
+      if (hasAddress && !hasAmount) {
+        // Properties
+        const props = rows.map((r) => ({
+          address: r.address || r.street || "",
+          suburb: r.suburb || r.city || "",
+          state: r.state || "NSW",
+          type: r.type || r.property_type || "House",
+          bedrooms: parseInt(r.bedrooms || r.beds || "3") || 3,
+          bathrooms: parseInt(r.bathrooms || r.baths || "1") || 1,
+          parking: parseInt(r.parking || r.car || "1") || 1,
+          rent: parseFloat(r.rent || r.weekly_rent || "500") || 500,
+          status: (r.status as any) || "vacant",
+          tenant: r.tenant || undefined,
+          owner: r.owner || "Unassigned",
+        }));
+        addProperties(props);
+        setImportResult({ type: "properties", count: props.length });
+        toast({ title: "Properties Imported", description: `${props.length} properties added to your portfolio.` });
+      } else if (hasAmount) {
+        // Transactions
+        const txs = rows.map((r) => ({
+          date: r.date || new Date().toISOString().slice(0, 10),
+          description: r.description || r.memo || "Imported transaction",
+          property: r.property || r.address || "General",
+          category: r.category || "General",
+          type: (r.type === "expense" ? "expense" : "income") as "income" | "expense",
+          amount: Math.abs(parseFloat(r.amount || "0")),
+          status: (r.status as any) || "completed",
+        }));
+        addTransactions(txs);
+        setImportResult({ type: "transactions", count: txs.length });
+        toast({ title: "Transactions Imported", description: `${txs.length} transactions added.` });
+      } else if (hasEmail) {
+        // Contacts
+        const cts = rows.map((r) => ({
+          name: r.name || r.full_name || "Unknown",
+          email: r.email || "",
+          phone: r.phone || r.mobile || "",
+          property: r.property || r.address || undefined,
+          status: "active" as const,
+          contactType: (r.type === "provider" ? "provider" : r.type === "tradie" ? "tradie" : "renter") as any,
+        }));
+        addContacts(cts);
+        setImportResult({ type: "contacts", count: cts.length });
+        toast({ title: "Contacts Imported", description: `${cts.length} contacts added.` });
+      } else {
+        toast({ title: "Unrecognized Format", description: "Could not detect data type. Use columns: address, amount, or email.", variant: "destructive" });
+      }
+    };
+    reader.readAsText(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const uploadTypes = [
+    { icon: FileArchive, title: "ZIP Archive", desc: "Drag & drop ZIP files here", format: "zip" },
+    { icon: FileText, title: "PDF Documents", desc: "Drag & drop PDF files here", format: "pdf" },
+    { icon: FileSpreadsheet, title: "CSV Spreadsheet", desc: "Drag & drop CSV files here", format: "csv" },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
+      <input type="file" ref={fileInputRef} accept=".csv,.txt" className="hidden" onChange={handleFileUpload} />
+
       {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -50,12 +143,6 @@ const Migration = () => {
               Agent <span className="text-primary">Upload Hub</span>
             </h1>
           </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-            <span className="cursor-pointer hover:text-foreground transition-colors">Upload</span>
-            <span className="cursor-pointer hover:text-foreground transition-colors">API</span>
-            <span className="cursor-pointer hover:text-foreground transition-colors">Agent Export</span>
-            <span className="cursor-pointer hover:text-foreground transition-colors">Docs</span>
-          </nav>
           <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
             Contact Support
           </Button>
@@ -72,16 +159,33 @@ const Migration = () => {
           to <span className="text-primary">OnlyAiRentals</span>
         </h2>
         <p className="text-muted-foreground max-w-xl mx-auto mb-8 leading-relaxed">
-          Import listings from any Australian platform. Supports ZIP archives, PDF documents, CSV exports and direct API integration with enterprise-grade security.
+          Import listings from any Australian platform. Supports CSV exports with auto-detection of properties, contacts, and financial data.
         </p>
         <div className="flex items-center justify-center gap-4">
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-6">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 px-6" onClick={() => fileInputRef.current?.click()}>
             <Upload className="h-4 w-4 mr-2" /> Start Migration
           </Button>
           <Button variant="outline" className="border-border">
             <Code className="h-4 w-4 mr-2" /> API Documentation
           </Button>
         </div>
+
+        {/* Import Result Banner */}
+        {importResult && (
+          <div className="mt-6 inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-4 py-3 text-sm">
+            <CheckCircle2 className="h-4 w-4 text-primary" />
+            <span className="text-foreground font-medium">
+              Successfully imported {importResult.count} {importResult.type}!
+            </span>
+            <Button variant="ghost" size="sm" onClick={() => {
+              if (importResult.type === "properties") navigate("/properties");
+              else if (importResult.type === "transactions") navigate("/financials");
+              else navigate("/contacts");
+            }}>
+              View →
+            </Button>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="flex flex-wrap justify-center gap-4 mt-12 max-w-3xl mx-auto">
@@ -118,6 +222,10 @@ const Migration = () => {
               {uploadTypes.map((u) => (
                 <Card
                   key={u.title}
+                  onClick={() => {
+                    if (u.format === "csv") fileInputRef.current?.click();
+                    else setSelectedFormat(u.format);
+                  }}
                   className="border-2 border-dashed border-border hover:border-primary/50 transition-colors p-8 flex flex-col items-center text-center cursor-pointer group"
                 >
                   <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
@@ -126,11 +234,32 @@ const Migration = () => {
                   <h3 className="font-semibold text-foreground mb-1">{u.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{u.desc}</p>
                   <Button variant="outline" size="sm" className="border-border">
-                    Browse Files
+                    {u.format === "csv" ? "Upload CSV" : "Browse Files"}
                   </Button>
                 </Card>
               ))}
             </div>
+
+            {/* CSV template hint */}
+            <Card className="p-5 border-border bg-card mb-8">
+              <h4 className="font-semibold text-foreground text-sm mb-2 flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-primary" /> CSV Format Guide
+              </h4>
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <p className="font-medium text-foreground mb-1">Properties</p>
+                  <code className="text-xs text-muted-foreground block bg-muted p-2 rounded">address, suburb, state, type, bedrooms, bathrooms, parking, rent, status, owner</code>
+                </div>
+                <div>
+                  <p className="font-medium text-foreground mb-1">Contacts</p>
+                  <code className="text-xs text-muted-foreground block bg-muted p-2 rounded">name, email, phone, type, property, status</code>
+                </div>
+                <div>
+                  <p className="font-medium text-foreground mb-1">Transactions</p>
+                  <code className="text-xs text-muted-foreground block bg-muted p-2 rounded">date, description, property, category, type, amount, status</code>
+                </div>
+              </div>
+            </Card>
 
             <div className="grid md:grid-cols-3 gap-6">
               {features.map((f) => (
