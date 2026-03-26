@@ -11,6 +11,7 @@ import Inspections from "./pages/Inspections.tsx";
 import ServicesPortal from "./pages/ServicesPortal.tsx";
 import Compliance from "./pages/Compliance.tsx";
 import Reports from "./pages/Reports.tsx";
+import Maintenance from "./pages/Maintenance.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
