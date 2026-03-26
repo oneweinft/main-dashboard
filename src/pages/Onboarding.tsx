@@ -37,6 +37,11 @@ const guides = [
   { title: "Rental Provider Handbook", description: "Obligations, insurance, compliance requirements" },
   { title: "Service Provider Setup", description: "Portal access, job acceptance workflow, invoicing" },
   { title: "Emergency Contacts & Procedures", description: "After-hours maintenance, fire safety, evacuation" },
+  { title: "Consumer Affairs Guide 1", description: "Renting a home – your rights and responsibilities" },
+  { title: "Consumer Affairs Guide 2", description: "Bonds – lodgement, claims and disputes" },
+  { title: "Consumer Affairs Guide 3", description: "Repairs and maintenance – urgent and non-urgent" },
+  { title: "Consumer Affairs Guide 4", description: "Rent increases – notice periods and disputes" },
+  { title: "Consumer Affairs Guide 5", description: "Ending a tenancy – notice, vacating and bond return" },
 ];
 
 const properties = [
