@@ -82,6 +82,7 @@ const ServicesPortal = () => {
                       className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                       onClick={() => {
                         if (portal.title === "Renter Portal") navigate("/renter-portal");
+                        if (portal.title === "Rental Provider Portal") navigate("/rental-provider-portal");
                       }}
                     >
                       Open Portal
