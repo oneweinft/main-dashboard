@@ -73,7 +73,7 @@ export function DashboardSidebar() {
           </div>
           {!collapsed && (
             <span className="text-lg font-bold text-sidebar-foreground">
-              OurProperty
+              PM Dashboard
             </span>
           )}
         </div>
