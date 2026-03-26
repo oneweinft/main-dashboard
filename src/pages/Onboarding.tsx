@@ -315,6 +315,8 @@ export default function Onboarding() {
                           <th className="pb-2 font-medium">ID</th>
                           <th className="pb-2 font-medium">Address</th>
                           <th className="pb-2 font-medium">Type</th>
+                          <th className="pb-2 font-medium">Bed/Bath/Park</th>
+                          <th className="pb-2 font-medium">Rent</th>
                           <th className="pb-2 font-medium">Status</th>
                         </tr>
                       </thead>
