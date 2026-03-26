@@ -400,38 +400,90 @@ const TradiePortal = () => {
                 <Input placeholder="Subject / Reference" />
               </div>
               <Textarea placeholder="Type your message..." className="min-h-[60px]" />
-              <Button size="sm"><Send className="h-3 w-3 mr-1" /> Send</Button>
+              {/* File upload for comms */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple className="hidden" onChange={(e) => handleFileSelect(e, setUploadedFiles)} />
+                <Button variant="outline" size="sm" className="text-xs gap-1 h-8" onClick={() => fileInputRef.current?.click()}>
+                  <Image className="h-3 w-3" /> Attach Photo
+                </Button>
+                <Button variant="outline" size="sm" className="text-xs gap-1 h-8" onClick={() => fileInputRef.current?.click()}>
+                  <Video className="h-3 w-3" /> Attach Video
+                </Button>
+                <Select value={uploadTag} onValueChange={(v: "before" | "after" | "general") => setUploadTag(v)}>
+                  <SelectTrigger className="w-28 h-8 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="before">Before</SelectItem>
+                    <SelectItem value="after">After</SelectItem>
+                    <SelectItem value="general">General</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {uploadedFiles.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {uploadedFiles.map((f, i) => (
+                    <div key={i} className="flex items-center gap-1.5 rounded-md border border-border bg-muted px-2 py-1">
+                      {f.type === "video" ? <Video className="h-3 w-3 text-primary" /> : <Image className="h-3 w-3 text-primary" />}
+                      <span className="text-xs text-foreground truncate max-w-[120px]">{f.name}</span>
+                      <Badge variant="outline" className="text-[9px]">{uploadTag}</Badge>
+                      <span className="text-[10px] text-muted-foreground">{f.size}</span>
+                      <button onClick={() => setUploadedFiles((prev) => prev.filter((_, j) => j !== i))} className="text-muted-foreground hover:text-destructive">
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <Button size="sm" onClick={() => setUploadedFiles([])}><Send className="h-3 w-3 mr-1" /> Send</Button>
             </div>
 
             {/* Logs */}
             <h3 className="text-sm font-bold text-foreground">Communication Logs</h3>
             {commLogs.map((log, i) => (
-              <div key={i} className="rounded-xl border border-border bg-card p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-primary/15 flex items-center justify-center">
-                    {log.type === "Email" ? <Mail className="h-4 w-4 text-primary" /> :
-                     log.type === "SMS" ? <MessageSquare className="h-4 w-4 text-primary" /> :
-                     <Phone className="h-4 w-4 text-primary" />}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-semibold text-foreground">{log.subject}</p>
-                      <Badge variant="outline" className="text-[10px]">{log.type}</Badge>
-                      <Badge variant="outline" className="text-[10px]">{log.direction}</Badge>
+              <div key={i} className="rounded-xl border border-border bg-card p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-lg bg-primary/15 flex items-center justify-center">
+                      {log.type === "Email" ? <Mail className="h-4 w-4 text-primary" /> :
+                       log.type === "SMS" ? <MessageSquare className="h-4 w-4 text-primary" /> :
+                       log.type === "Photo" ? <Image className="h-4 w-4 text-primary" /> :
+                       log.type === "Video" ? <Video className="h-4 w-4 text-primary" /> :
+                       <Phone className="h-4 w-4 text-primary" />}
                     </div>
-                    <p className="text-xs text-muted-foreground">{log.contact}</p>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm font-semibold text-foreground">{log.subject}</p>
+                        <Badge variant="outline" className="text-[10px]">{log.type}</Badge>
+                        <Badge variant="outline" className="text-[10px]">{log.direction}</Badge>
+                        {log.workOrder && <Badge variant="outline" className="text-[10px] bg-primary/5">{log.workOrder}</Badge>}
+                      </div>
+                      <p className="text-xs text-muted-foreground">{log.contact}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Clock className="h-3 w-3" /> {log.time}
+                    </span>
+                    <span className={`text-xs rounded-full px-3 py-1 font-medium ${
+                      log.status === "Sent" ? "bg-primary/15 text-primary" :
+                      log.status === "Received" ? "bg-primary/15 text-primary" :
+                      "bg-destructive/15 text-destructive"
+                    }`}>{log.status}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock className="h-3 w-3" /> {log.time}
-                  </span>
-                  <span className={`text-xs rounded-full px-3 py-1 font-medium ${
-                    log.status === "Sent" ? "bg-primary/15 text-primary" :
-                    log.status === "Received" ? "bg-primary/15 text-primary" :
-                    "bg-destructive/15 text-destructive"
-                  }`}>{log.status}</span>
-                </div>
+                {/* Attachment thumbnails */}
+                {log.attachments && log.attachments.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2 ml-11">
+                    {log.attachments.map((att, j) => (
+                      <div key={j} className="flex items-center gap-1.5 rounded-md border border-border bg-muted/50 px-2 py-1.5 group cursor-pointer hover:border-primary/30">
+                        <div className="h-8 w-12 rounded bg-muted flex items-center justify-center">
+                          {att.type === "video" ? <Video className="h-4 w-4 text-muted-foreground" /> : <Image className="h-4 w-4 text-muted-foreground" />}
+                        </div>
+                        <span className="text-xs text-foreground truncate max-w-[100px]">{att.name}</span>
+                        <Eye className="h-3 w-3 text-muted-foreground group-hover:text-primary" />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
