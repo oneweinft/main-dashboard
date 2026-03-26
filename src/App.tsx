@@ -9,6 +9,7 @@ import AIReceptionist from "./pages/AIReceptionist.tsx";
 import Documents from "./pages/Documents.tsx";
 import Inspections from "./pages/Inspections.tsx";
 import ServicesPortal from "./pages/ServicesPortal.tsx";
+import Compliance from "./pages/Compliance.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
