@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import InspectionScriptBuilder from "@/components/inspections/InspectionScriptBuilder";
+import AIInspectionDigest from "@/components/inspections/AIInspectionDigest";
 
 const inspections = [
   { address: "24 Casterly Rock, NSW", keyNo: "344", beds: 3, baths: 2, cars: 1, type: "Routine", date: "Apr 12, 2026", status: "Scheduled", method: "In-Person" },
