@@ -167,6 +167,11 @@ type Section = typeof sidebarItems[number]["title"];
 const RenterPortal = () => {
   const [activeNav, setActiveNav] = useState<Section>("Dashboard");
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [liveOpen, setLiveOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isCamOff, setIsCamOff] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   const renderContent = () => {
     switch (activeNav) {
