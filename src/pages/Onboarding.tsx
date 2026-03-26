@@ -326,6 +326,8 @@ export default function Onboarding() {
                             <td className="py-3 font-mono text-xs">{p.id}</td>
                             <td className="py-3">{p.address}</td>
                             <td className="py-3">{p.type}</td>
+                            <td className="py-3">{p.bedrooms}/{p.bathrooms}/{p.parking}</td>
+                            <td className="py-3 font-medium">{p.rent}</td>
                             <td className="py-3">
                               <Badge variant={p.status === "Active" ? "default" : "secondary"}
                                 className={p.status === "Onboarding" ? "bg-amber-100 text-amber-700 border-amber-200" : "bg-emerald-100 text-emerald-700 border-emerald-200"}>
