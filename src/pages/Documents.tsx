@@ -28,7 +28,7 @@ const documents = [
 ];
 
 const Documents = () => {
-  const [activeTab, setActiveTab] = useState<"documents" | "archived">("documents");
+  const [activeTab, setActiveTab] = useState<"documents" | "archived" | "forms">("documents");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [keyword, setKeyword] = useState("");
 
