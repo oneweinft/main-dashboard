@@ -46,9 +46,17 @@ const guides = [
 ];
 
 const properties = [
-  { id: "P001", address: "12 Collins St, Melbourne VIC 3000", type: "Apartment", bedrooms: 2, bathrooms: 1, parking: 1, rent: "$450/wk", status: "Active" },
-  { id: "P002", address: "45 George St, Sydney NSW 2000", type: "House", bedrooms: 3, bathrooms: 2, parking: 2, rent: "$680/wk", status: "Onboarding" },
-  { id: "P003", address: "8 Adelaide Tce, Perth WA 6000", type: "Unit", bedrooms: 1, bathrooms: 1, parking: 1, rent: "$350/wk", status: "Active" },
+  { id: "P001", address: "12 Collins St, Melbourne VIC 3000", type: "Apartment", bedrooms: 2, bathrooms: 1, parking: 1, rent: "$450/wk", status: "Active", workOrders: 0 },
+  { id: "P002", address: "45 George St, Sydney NSW 2000", type: "House", bedrooms: 3, bathrooms: 2, parking: 2, rent: "$680/wk", status: "Onboarding", workOrders: 3 },
+  { id: "P003", address: "8 Adelaide Tce, Perth WA 6000", type: "Unit", bedrooms: 1, bathrooms: 1, parking: 1, rent: "$350/wk", status: "Active", workOrders: 1 },
+];
+
+const commsLog = [
+  { type: "email" as const, from: "admin@pmdashboard.com.au", to: "plumber@fixitfast.com.au", subject: "Work Order #WO-1042 – Leaking tap", date: "26 Mar 2026, 9:15 AM", status: "Sent" },
+  { type: "phone" as const, from: "Sarah Mitchell", to: "ElectroPro Services", subject: "Urgent: Power outage at 45 George St", date: "25 Mar 2026, 3:42 PM", status: "Completed", duration: "4 min" },
+  { type: "email" as const, from: "cleaner@sparkle.com.au", to: "admin@pmdashboard.com.au", subject: "End-of-lease clean confirmation", date: "25 Mar 2026, 11:00 AM", status: "Received" },
+  { type: "phone" as const, from: "Admin", to: "GreenThumb Gardens", subject: "Scheduled lawn maintenance", date: "24 Mar 2026, 2:00 PM", status: "Missed", duration: "—" },
+  { type: "sms" as const, from: "System", to: "FixIt Fast Plumbing", subject: "Reminder: Work order #WO-1042 due tomorrow", date: "24 Mar 2026, 10:00 AM", status: "Delivered" },
 ];
 
 export default function Onboarding() {
