@@ -23,10 +23,25 @@ import {
   Download,
   ClipboardCheck,
   XCircle,
+  Video,
+  Camera,
+  Mic,
+  MicOff,
+  VideoOff,
+  Monitor,
+  PhoneOff,
+  Users,
+  ExternalLink,
+  PlayCircle,
+  FileVideo,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const sidebarItems = [
   { title: "Dashboard", icon: LayoutDashboard },
