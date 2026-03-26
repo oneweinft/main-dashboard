@@ -51,6 +51,7 @@ const App = () => (
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/integrations" element={<Integrations />} />
           <Route path="/soc2-checklist" element={<SOC2Checklist />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
