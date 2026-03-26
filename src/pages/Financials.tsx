@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -14,12 +15,18 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DollarSign, TrendingUp, TrendingDown, Download, Upload, FileSpreadsheet,
-  ArrowUpRight, ArrowDownRight, BarChart3, PieChart, FileText, Filter, Search,
+  ArrowUpRight, ArrowDownRight, PieChart, FileText, Search, Plus, BarChart3,
 } from "lucide-react";
 import {
-  BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, LineChart, Line, CartesianGrid,
+  BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid,
 } from "recharts";
+import { useData, type Transaction } from "@/context/DataContext";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const revenueData = [
   { month: "Jul", income: 82400, expenses: 31200 },
@@ -31,30 +38,6 @@ const revenueData = [
   { month: "Jan", income: 91200, expenses: 31800 },
   { month: "Feb", income: 90800, expenses: 30100 },
   { month: "Mar", income: 93400, expenses: 32700 },
-];
-
-type Transaction = {
-  id: number;
-  date: string;
-  description: string;
-  property: string;
-  category: string;
-  type: "income" | "expense";
-  amount: number;
-  status: "completed" | "pending" | "failed";
-};
-
-const transactions: Transaction[] = [
-  { id: 1, date: "2025-03-25", description: "Rent Payment", property: "24 Casterly Rock Dr", category: "Rent", type: "income", amount: 950, status: "completed" },
-  { id: 2, date: "2025-03-24", description: "Plumbing Repair", property: "8 Park Ave", category: "Maintenance", type: "expense", amount: 380, status: "completed" },
-  { id: 3, date: "2025-03-24", description: "Rent Payment", property: "15 High St", category: "Rent", type: "income", amount: 620, status: "completed" },
-  { id: 4, date: "2025-03-23", description: "Insurance Premium", property: "56 Elm Cres", category: "Insurance", type: "expense", amount: 245, status: "pending" },
-  { id: 5, date: "2025-03-22", description: "Rent Payment", property: "56 Elm Cres", category: "Rent", type: "income", amount: 1200, status: "completed" },
-  { id: 6, date: "2025-03-22", description: "Body Corporate Fees", property: "15 High St", category: "Admin", type: "expense", amount: 890, status: "completed" },
-  { id: 7, date: "2025-03-21", description: "Rent Payment", property: "33 King William St", category: "Rent", type: "income", amount: 550, status: "failed" },
-  { id: 8, date: "2025-03-20", description: "Property Inspection", property: "9 Ocean Pde", category: "Compliance", type: "expense", amount: 150, status: "completed" },
-  { id: 9, date: "2025-03-19", description: "Management Fee", property: "24 Casterly Rock Dr", category: "Admin", type: "expense", amount: 76, status: "completed" },
-  { id: 10, date: "2025-03-18", description: "Rent Payment", property: "9 Ocean Pde", category: "Rent", type: "income", amount: 700, status: "pending" },
 ];
 
 const importFormats = [
@@ -79,22 +62,33 @@ const statusColor: Record<Transaction["status"], string> = {
 };
 
 const Financials = () => {
+  const { transactions, addTransaction, properties } = useData();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [tab, setTab] = useState("overview");
   const [search, setSearch] = useState("");
   const [txFilter, setTxFilter] = useState("all");
+  const [addOpen, setAddOpen] = useState(false);
+  const [form, setForm] = useState({ date: new Date().toISOString().slice(0, 10), description: "", property: "", category: "Rent", type: "income" as "income" | "expense", amount: "", status: "completed" as Transaction["status"] });
 
   const totalIncome = transactions.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);
   const totalExpenses = transactions.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0);
 
   const filteredTx = transactions.filter((t) => {
-    const matchSearch =
-      t.description.toLowerCase().includes(search.toLowerCase()) ||
-      t.property.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = t.description.toLowerCase().includes(search.toLowerCase()) || t.property.toLowerCase().includes(search.toLowerCase());
     if (txFilter === "all") return matchSearch;
     if (txFilter === "income") return matchSearch && t.type === "income";
     if (txFilter === "expense") return matchSearch && t.type === "expense";
     return matchSearch;
   });
+
+  const handleAddTx = () => {
+    if (!form.description || !form.amount) { toast({ title: "Required", description: "Description and amount are required.", variant: "destructive" }); return; }
+    addTransaction({ date: form.date, description: form.description, property: form.property || "General", category: form.category, type: form.type, amount: parseFloat(form.amount), status: form.status });
+    toast({ title: "Transaction Added", description: `${form.description} — $${form.amount}` });
+    setForm({ date: new Date().toISOString().slice(0, 10), description: "", property: "", category: "Rent", type: "income", amount: "", status: "completed" });
+    setAddOpen(false);
+  };
 
   return (
     <SidebarProvider>
@@ -103,7 +97,6 @@ const Financials = () => {
         <div className="flex-1 flex flex-col">
           <DashboardHeader />
           <main className="flex-1 overflow-auto p-6 space-y-6">
-            {/* Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -115,27 +108,64 @@ const Financials = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" className="gap-2">
-                  <Upload className="h-4 w-4" /> Import
+                <Button variant="outline" className="gap-2" onClick={() => navigate("/migration")}>
+                  <Upload className="h-4 w-4" /> Import via Migration
                 </Button>
-                <Button className="gap-2">
-                  <Download className="h-4 w-4" /> Export
-                </Button>
+                <Dialog open={addOpen} onOpenChange={setAddOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="gap-2"><Plus className="h-4 w-4" /> Add Transaction</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader><DialogTitle>Add Transaction</DialogTitle></DialogHeader>
+                    <div className="grid gap-3">
+                      <div className="grid grid-cols-2 gap-3">
+                        <div><Label>Date</Label><Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} /></div>
+                        <div><Label>Type</Label>
+                          <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v as "income" | "expense" })}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent><SelectItem value="income">Income</SelectItem><SelectItem value="expense">Expense</SelectItem></SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div><Label>Description</Label><Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Rent Payment" /></div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div><Label>Property</Label>
+                          <Select value={form.property} onValueChange={(v) => setForm({ ...form, property: v })}>
+                            <SelectTrigger><SelectValue placeholder="Select property" /></SelectTrigger>
+                            <SelectContent>{properties.map((p) => <SelectItem key={p.id} value={p.address}>{p.address}</SelectItem>)}</SelectContent>
+                          </Select>
+                        </div>
+                        <div><Label>Category</Label>
+                          <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v })}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>{["Rent", "Maintenance", "Insurance", "Admin", "Compliance", "General"].map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div><Label>Amount ($)</Label><Input type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="0.00" /></div>
+                        <div><Label>Status</Label>
+                          <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as Transaction["status"] })}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent><SelectItem value="completed">Completed</SelectItem><SelectItem value="pending">Pending</SelectItem><SelectItem value="failed">Failed</SelectItem></SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <Button onClick={handleAddTx} className="w-full">Add Transaction</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
-            {/* Tabs */}
             <Tabs value={tab} onValueChange={setTab}>
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="transactions">Transactions</TabsTrigger>
-                <TabsTrigger value="import">Import</TabsTrigger>
+                <TabsTrigger value="transactions">Transactions ({transactions.length})</TabsTrigger>
                 <TabsTrigger value="export">Export</TabsTrigger>
               </TabsList>
 
-              {/* Overview */}
               <TabsContent value="overview" className="space-y-6 mt-4">
-                {/* Summary cards */}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {[
                     { label: "Total Income", value: `$${totalIncome.toLocaleString()}`, change: "+8.2%", up: true, icon: TrendingUp },
@@ -151,11 +181,7 @@ const Financials = () => {
                         </div>
                         <p className="mt-1 text-2xl font-bold text-foreground">{s.value}</p>
                         <div className="mt-1 flex items-center gap-1 text-xs">
-                          {s.up ? (
-                            <ArrowUpRight className="h-3 w-3 text-emerald-400" />
-                          ) : (
-                            <ArrowDownRight className="h-3 w-3 text-red-400" />
-                          )}
+                          {s.up ? <ArrowUpRight className="h-3 w-3 text-emerald-400" /> : <ArrowDownRight className="h-3 w-3 text-red-400" />}
                           <span className={s.up ? "text-emerald-400" : "text-red-400"}>{s.change}</span>
                           <span className="text-muted-foreground">vs last period</span>
                         </div>
@@ -163,12 +189,8 @@ const Financials = () => {
                     </Card>
                   ))}
                 </div>
-
-                {/* Chart */}
                 <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base font-bold text-primary">Income vs Expenses</CardTitle>
-                  </CardHeader>
+                  <CardHeader className="pb-2"><CardTitle className="text-base font-bold text-primary">Income vs Expenses</CardTitle></CardHeader>
                   <CardContent>
                     <div className="h-[260px] w-full">
                       <ResponsiveContainer width="100%" height="100%">
@@ -176,16 +198,7 @@ const Financials = () => {
                           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                           <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
                           <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
-                          <Tooltip
-                            contentStyle={{
-                              borderRadius: 8,
-                              border: "1px solid hsl(var(--border))",
-                              background: "hsl(var(--card))",
-                              color: "hsl(var(--foreground))",
-                              fontSize: 12,
-                            }}
-                            formatter={(v: number) => [`$${v.toLocaleString()}`, undefined]}
-                          />
+                          <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))", fontSize: 12 }} formatter={(v: number) => [`$${v.toLocaleString()}`, undefined]} />
                           <Bar dataKey="income" name="Income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                           <Bar dataKey="expenses" name="Expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
                         </BarChart>
@@ -195,7 +208,6 @@ const Financials = () => {
                 </Card>
               </TabsContent>
 
-              {/* Transactions */}
               <TabsContent value="transactions" className="space-y-4 mt-4">
                 <div className="flex gap-2">
                   <div className="relative flex-1 max-w-sm">
@@ -203,14 +215,8 @@ const Financials = () => {
                     <Input placeholder="Search transactions..." className="pl-9" value={search} onChange={(e) => setSearch(e.target.value)} />
                   </div>
                   <Select value={txFilter} onValueChange={setTxFilter}>
-                    <SelectTrigger className="w-[140px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="income">Income</SelectItem>
-                      <SelectItem value="expense">Expenses</SelectItem>
-                    </SelectContent>
+                    <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
+                    <SelectContent><SelectItem value="all">All</SelectItem><SelectItem value="income">Income</SelectItem><SelectItem value="expense">Expenses</SelectItem></SelectContent>
                   </Select>
                 </div>
                 <Card>
@@ -218,12 +224,7 @@ const Financials = () => {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Description</TableHead>
-                          <TableHead>Property</TableHead>
-                          <TableHead>Category</TableHead>
-                          <TableHead>Amount</TableHead>
-                          <TableHead>Status</TableHead>
+                          <TableHead>Date</TableHead><TableHead>Description</TableHead><TableHead>Property</TableHead><TableHead>Category</TableHead><TableHead>Amount</TableHead><TableHead>Status</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -236,9 +237,7 @@ const Financials = () => {
                             <TableCell className={`font-medium ${t.type === "income" ? "text-emerald-400" : "text-red-400"}`}>
                               {t.type === "income" ? "+" : "-"}${t.amount.toLocaleString()}
                             </TableCell>
-                            <TableCell>
-                              <Badge variant="outline" className={statusColor[t.status]}>{t.status}</Badge>
-                            </TableCell>
+                            <TableCell><Badge variant="outline" className={statusColor[t.status]}>{t.status}</Badge></TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -247,84 +246,27 @@ const Financials = () => {
                 </Card>
               </TabsContent>
 
-              {/* Import */}
-              <TabsContent value="import" className="space-y-4 mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <Upload className="h-5 w-5 text-primary" /> Import Financial Data
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      Upload financial records from your accounting software or spreadsheets. Supported formats:
-                    </p>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {importFormats.map((f) => (
-                        <button
-                          key={f.label}
-                          className="flex items-center gap-3 rounded-lg border border-border p-4 text-left transition-colors hover:bg-accent"
-                        >
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                            <f.icon className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-foreground">{f.label}</p>
-                            <p className="text-xs text-muted-foreground">{f.desc}</p>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                    <div className="flex items-center justify-center rounded-lg border-2 border-dashed border-border p-10 text-center">
-                      <div>
-                        <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
-                        <p className="mt-2 font-medium text-foreground">Drag & drop files here</p>
-                        <p className="text-sm text-muted-foreground">or click to browse</p>
-                        <Button variant="outline" className="mt-4">Select Files</Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              {/* Export */}
               <TabsContent value="export" className="space-y-4 mt-4">
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <Download className="h-5 w-5 text-primary" /> Export Financial Reports
-                    </CardTitle>
-                  </CardHeader>
+                  <CardHeader><CardTitle className="flex items-center gap-2 text-base"><Download className="h-5 w-5 text-primary" /> Export Financial Reports</CardTitle></CardHeader>
                   <CardContent className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      Generate and download financial reports for owners, tax filing, and compliance.
-                    </p>
+                    <p className="text-sm text-muted-foreground">Generate and download financial reports for owners, tax filing, and compliance.</p>
                     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                       {exportFormats.map((f) => (
                         <Card key={f.label} className="cursor-pointer transition-colors hover:bg-accent">
                           <CardContent className="flex items-center gap-3 p-4">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                              <f.icon className="h-5 w-5 text-primary" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="font-medium text-foreground">{f.label}</p>
-                              <p className="text-xs text-muted-foreground">{f.desc}</p>
-                            </div>
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10"><f.icon className="h-5 w-5 text-primary" /></div>
+                            <div className="flex-1"><p className="font-medium text-foreground">{f.label}</p><p className="text-xs text-muted-foreground">{f.desc}</p></div>
                             <Download className="h-4 w-4 text-muted-foreground" />
                           </CardContent>
                         </Card>
                       ))}
                     </div>
                     <div className="flex flex-wrap gap-3 rounded-lg border border-border p-4">
-                      <div>
-                        <p className="text-sm font-medium text-foreground">Date Range</p>
-                        <p className="text-xs text-muted-foreground">Select the reporting period</p>
-                      </div>
+                      <div><p className="text-sm font-medium text-foreground">Date Range</p><p className="text-xs text-muted-foreground">Select the reporting period</p></div>
                       <div className="ml-auto flex gap-2">
                         {["This Month", "This Quarter", "This FY", "Custom"].map((p) => (
-                          <Button key={p} variant={p === "This Month" ? "default" : "outline"} size="sm">
-                            {p}
-                          </Button>
+                          <Button key={p} variant={p === "This Month" ? "default" : "outline"} size="sm">{p}</Button>
                         ))}
                       </div>
                     </div>

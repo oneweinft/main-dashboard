@@ -1,14 +1,17 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, UserCheck, BarChart3, MessageSquare } from "lucide-react";
-
-const cards = [
-  { title: "Application Compliance", icon: ShieldCheck, value: 24, subtitle: "Pending review" },
-  { title: "Application Verification", icon: UserCheck, value: 18, subtitle: "In progress" },
-  { title: "Application Scoring", icon: BarChart3, value: 42, subtitle: "Scored this month" },
-  { title: "Communication", icon: MessageSquare, value: 7, subtitle: "Unread messages" },
-];
+import { useData } from "@/context/DataContext";
 
 export function QuickCards() {
+  const { properties, contacts, transactions } = useData();
+
+  const cards = [
+    { title: "Properties", icon: ShieldCheck, value: properties.length, subtitle: "In portfolio" },
+    { title: "Contacts", icon: UserCheck, value: contacts.length, subtitle: "Active contacts" },
+    { title: "Transactions", icon: BarChart3, value: transactions.length, subtitle: "Recorded" },
+    { title: "Revenue", icon: MessageSquare, value: `$${transactions.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0).toLocaleString()}`, subtitle: "Total income" },
+  ];
+
   return (
     <div className="grid grid-cols-2 gap-4">
       {cards.map((card) => (

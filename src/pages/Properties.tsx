@@ -11,35 +11,17 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Building2, Search, Plus, MapPin, Home, Users, DollarSign, Filter,
-  ArrowUpDown, Eye,
+  Building2, Search, Plus, MapPin, Home, Users, DollarSign, Filter, Eye,
 } from "lucide-react";
-
-type Property = {
-  id: number;
-  address: string;
-  suburb: string;
-  state: string;
-  type: string;
-  bedrooms: number;
-  bathrooms: number;
-  parking: number;
-  rent: number;
-  status: "occupied" | "vacant" | "maintenance" | "listed";
-  tenant?: string;
-  owner: string;
-};
-
-const properties: Property[] = [
-  { id: 1, address: "24 Casterly Rock Dr", suburb: "Bondi", state: "NSW", type: "House", bedrooms: 4, bathrooms: 2, parking: 2, rent: 950, status: "occupied", tenant: "Sarah Mitchell", owner: "David Chen" },
-  { id: 2, address: "15 High St", suburb: "Southbank", state: "QLD", type: "Apartment", bedrooms: 2, bathrooms: 1, parking: 1, rent: 620, status: "occupied", tenant: "James Cooper", owner: "Maria Santos" },
-  { id: 3, address: "8 Park Ave", suburb: "Richmond", state: "VIC", type: "Townhouse", bedrooms: 3, bathrooms: 2, parking: 1, rent: 780, status: "vacant", owner: "Robert Taylor" },
-  { id: 4, address: "102 River Rd", suburb: "Parramatta", state: "NSW", type: "Apartment", bedrooms: 1, bathrooms: 1, parking: 1, rent: 480, status: "listed", owner: "David Chen" },
-  { id: 5, address: "56 Elm Cres", suburb: "Fitzroy", state: "VIC", type: "House", bedrooms: 5, bathrooms: 3, parking: 2, rent: 1200, status: "occupied", tenant: "Emma Wilson", owner: "Maria Santos" },
-  { id: 6, address: "9 Ocean Pde", suburb: "Manly", state: "NSW", type: "Unit", bedrooms: 2, bathrooms: 1, parking: 1, rent: 700, status: "maintenance", owner: "Robert Taylor" },
-  { id: 7, address: "33 King William St", suburb: "Adelaide", state: "SA", type: "Apartment", bedrooms: 3, bathrooms: 2, parking: 2, rent: 550, status: "occupied", tenant: "Liam O'Brien", owner: "David Chen" },
-  { id: 8, address: "12 Sunset Blvd", suburb: "Surfers Paradise", state: "QLD", type: "House", bedrooms: 4, bathrooms: 2, parking: 2, rent: 880, status: "vacant", owner: "Maria Santos" },
-];
+import { useData, type Property } from "@/context/DataContext";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 const statusColor: Record<Property["status"], string> = {
   occupied: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
@@ -49,14 +31,15 @@ const statusColor: Record<Property["status"], string> = {
 };
 
 const Properties = () => {
+  const { properties, addProperty } = useData();
+  const { toast } = useToast();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("all");
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ address: "", suburb: "", state: "NSW", type: "House", bedrooms: "3", bathrooms: "1", parking: "1", rent: "500", status: "vacant" as Property["status"], owner: "" });
 
   const filtered = properties.filter((p) => {
-    const matchSearch =
-      p.address.toLowerCase().includes(search.toLowerCase()) ||
-      p.suburb.toLowerCase().includes(search.toLowerCase()) ||
-      p.owner.toLowerCase().includes(search.toLowerCase());
+    const matchSearch = p.address.toLowerCase().includes(search.toLowerCase()) || p.suburb.toLowerCase().includes(search.toLowerCase()) || p.owner.toLowerCase().includes(search.toLowerCase());
     if (tab === "all") return matchSearch;
     return matchSearch && p.status === tab;
   });
@@ -68,6 +51,14 @@ const Properties = () => {
     revenue: properties.filter((p) => p.status === "occupied").reduce((s, p) => s + p.rent, 0),
   };
 
+  const handleAdd = () => {
+    if (!form.address || !form.owner) { toast({ title: "Required", description: "Address and owner are required.", variant: "destructive" }); return; }
+    addProperty({ address: form.address, suburb: form.suburb, state: form.state, type: form.type, bedrooms: parseInt(form.bedrooms), bathrooms: parseInt(form.bathrooms), parking: parseInt(form.parking), rent: parseFloat(form.rent), status: form.status, owner: form.owner });
+    toast({ title: "Property Added", description: `${form.address} has been added.` });
+    setForm({ address: "", suburb: "", state: "NSW", type: "House", bedrooms: "3", bathrooms: "1", parking: "1", rent: "500", status: "vacant", owner: "" });
+    setOpen(false);
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -75,7 +66,6 @@ const Properties = () => {
         <div className="flex-1 flex flex-col">
           <DashboardHeader />
           <main className="flex-1 overflow-auto p-6 space-y-6">
-            {/* Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -86,12 +76,50 @@ const Properties = () => {
                   <p className="text-sm text-muted-foreground">Manage your property portfolio</p>
                 </div>
               </div>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" /> Add Property
-              </Button>
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button className="gap-2"><Plus className="h-4 w-4" /> Add Property</Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-lg">
+                  <DialogHeader><DialogTitle>Add New Property</DialogTitle></DialogHeader>
+                  <div className="grid gap-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div><Label>Address</Label><Input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} placeholder="123 Main St" /></div>
+                      <div><Label>Suburb</Label><Input value={form.suburb} onChange={(e) => setForm({ ...form, suburb: e.target.value })} placeholder="Bondi" /></div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div><Label>State</Label>
+                        <Select value={form.state} onValueChange={(v) => setForm({ ...form, state: v })}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>{["NSW", "VIC", "QLD", "SA", "WA", "TAS", "NT", "ACT"].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                        </Select>
+                      </div>
+                      <div><Label>Type</Label>
+                        <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>{["House", "Apartment", "Townhouse", "Unit", "Villa"].map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                        </Select>
+                      </div>
+                      <div><Label>Status</Label>
+                        <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as Property["status"] })}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>{["vacant", "occupied", "maintenance", "listed"].map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-3">
+                      <div><Label>Beds</Label><Input type="number" value={form.bedrooms} onChange={(e) => setForm({ ...form, bedrooms: e.target.value })} /></div>
+                      <div><Label>Baths</Label><Input type="number" value={form.bathrooms} onChange={(e) => setForm({ ...form, bathrooms: e.target.value })} /></div>
+                      <div><Label>Parking</Label><Input type="number" value={form.parking} onChange={(e) => setForm({ ...form, parking: e.target.value })} /></div>
+                      <div><Label>Rent (pw)</Label><Input type="number" value={form.rent} onChange={(e) => setForm({ ...form, rent: e.target.value })} /></div>
+                    </div>
+                    <div><Label>Owner</Label><Input value={form.owner} onChange={(e) => setForm({ ...form, owner: e.target.value })} placeholder="Owner name" /></div>
+                    <Button onClick={handleAdd} className="w-full">Add Property</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
-            {/* Stats */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 { label: "Total Properties", value: stats.total, icon: Building2 },
@@ -113,7 +141,6 @@ const Properties = () => {
               ))}
             </div>
 
-            {/* Filters & Table */}
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -129,16 +156,9 @@ const Properties = () => {
                   <div className="flex gap-2">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input
-                        placeholder="Search properties..."
-                        className="pl-9 w-[220px]"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                      />
+                      <Input placeholder="Search properties..." className="pl-9 w-[220px]" value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
-                    <Button variant="outline" size="icon">
-                      <Filter className="h-4 w-4" />
-                    </Button>
+                    <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
                   </div>
                 </div>
               </CardHeader>
@@ -160,42 +180,19 @@ const Properties = () => {
                     {filtered.map((p) => (
                       <TableRow key={p.id}>
                         <TableCell>
-                          <div>
-                            <span className="font-medium text-foreground">{p.address}</span>
-                            <span className="block text-xs text-muted-foreground">
-                              {p.suburb}, {p.state}
-                            </span>
-                          </div>
+                          <div><span className="font-medium text-foreground">{p.address}</span><span className="block text-xs text-muted-foreground">{p.suburb}, {p.state}</span></div>
                         </TableCell>
                         <TableCell className="text-muted-foreground">{p.type}</TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {p.bedrooms} / {p.bathrooms} / {p.parking}
-                        </TableCell>
-                        <TableCell className="font-medium text-foreground">
-                          ${p.rent}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className={statusColor[p.status]}>
-                            {p.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {p.tenant || "—"}
-                        </TableCell>
+                        <TableCell className="text-muted-foreground">{p.bedrooms} / {p.bathrooms} / {p.parking}</TableCell>
+                        <TableCell className="font-medium text-foreground">${p.rent}</TableCell>
+                        <TableCell><Badge variant="outline" className={statusColor[p.status]}>{p.status}</Badge></TableCell>
+                        <TableCell className="text-muted-foreground">{p.tenant || "—"}</TableCell>
                         <TableCell className="text-muted-foreground">{p.owner}</TableCell>
-                        <TableCell>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
+                        <TableCell><Button variant="ghost" size="icon" className="h-8 w-8"><Eye className="h-4 w-4" /></Button></TableCell>
                       </TableRow>
                     ))}
                     {filtered.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                          No properties found.
-                        </TableCell>
-                      </TableRow>
+                      <TableRow><TableCell colSpan={8} className="h-24 text-center text-muted-foreground">No properties found.</TableCell></TableRow>
                     )}
                   </TableBody>
                 </Table>
