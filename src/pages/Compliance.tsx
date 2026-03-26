@@ -33,6 +33,7 @@ const poolData = [
 
 const Compliance = () => {
   const [activeTab, setActiveTab] = useState("pools");
+  const navigate = useNavigate();
 
   return (
     <SidebarProvider>
