@@ -10,8 +10,6 @@ import {
   Building2,
   Key,
   DollarSign,
-  CheckSquare,
-  Trash2,
   Settings,
   Wrench,
   HelpCircle,
@@ -21,6 +19,7 @@ import {
   Bot,
   UserPlus,
   ArrowRightLeft,
+  Phone,
 } from "lucide-react";
 import {
   Sidebar,
@@ -47,11 +46,10 @@ const mainItems = [
   { title: "Properties", icon: Building2 },
   { title: "Tenancies", icon: Key },
   { title: "Financials", icon: DollarSign },
-  { title: "Approvals", icon: CheckSquare },
-  { title: "Delete Approvals", icon: Trash2 },
   { title: "Maintenance", icon: Wrench },
   { title: "Renter Onboarding", icon: UserPlus },
   { title: "Migration", icon: ArrowRightLeft },
+  { title: "AI Voice Receptionist", icon: Phone },
 ];
 
 const portalItems = [
