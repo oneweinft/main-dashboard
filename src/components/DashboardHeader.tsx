@@ -1,14 +1,73 @@
 import { useState } from "react";
-import { Bell, Search, Bot, Send, X } from "lucide-react";
+import { Bell, Search, Bot, Send, X, Mic } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+
+function MiniOrb({ isListening }: { isListening: boolean }) {
+  return (
+    <div className="relative flex items-center justify-center">
+      {[1, 2].map((i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: 80 + i * 24,
+            height: 80 + i * 24,
+            background: `radial-gradient(circle, hsla(195, 100%, 50%, ${0.06 - i * 0.02}) 0%, transparent 70%)`,
+          }}
+          animate={{
+            scale: isListening ? [1, 1.12, 1] : [1, 1.04, 1],
+            opacity: isListening ? [0.5, 1, 0.5] : [0.3, 0.5, 0.3],
+          }}
+          transition={{ duration: 2 + i * 0.5, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+      <motion.div
+        className="relative h-20 w-20 rounded-full"
+        style={{
+          background:
+            "radial-gradient(circle at 40% 35%, hsl(195, 100%, 80%), hsl(200, 100%, 55%) 40%, hsl(210, 90%, 40%) 70%, hsl(220, 80%, 20%) 100%)",
+          boxShadow:
+            "0 0 30px 8px hsla(195, 100%, 50%, 0.3), 0 0 60px 20px hsla(200, 100%, 50%, 0.15), inset 0 0 20px 5px hsla(195, 100%, 70%, 0.3)",
+        }}
+        animate={{
+          scale: isListening ? [1, 1.08, 1] : [1, 1.03, 1],
+          rotate: [0, 360],
+        }}
+        transition={{
+          scale: { duration: isListening ? 1.5 : 3, repeat: Infinity, ease: "easeInOut" },
+          rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+        }}
+      >
+        <motion.div
+          className="absolute inset-2 rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle at 35% 30%, hsla(190, 100%, 90%, 0.9), hsla(200, 100%, 60%, 0.3) 50%, transparent 70%)",
+          }}
+          animate={{ opacity: [0.5, 0.8, 0.5], scale: [1, 1.05, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background:
+              "conic-gradient(from 0deg, transparent, hsla(195, 100%, 70%, 0.15), transparent, hsla(200, 100%, 60%, 0.1), transparent)",
+          }}
+          animate={{ rotate: [0, -360] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        />
+      </motion.div>
+    </div>
+  );
+}
 
 export function DashboardHeader() {
   const [aiQuery, setAiQuery] = useState("");
   const [aiOpen, setAiOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
 
   const handleAiSubmit = (e: React.FormEvent) => {
@@ -25,7 +84,6 @@ export function DashboardHeader() {
         <h1 className="text-lg font-bold text-foreground">Dashboard</h1>
       </div>
       <div className="flex items-center gap-2">
-        {/* AI Assistant CTA */}
         <Button
           variant="outline"
           size="sm"
@@ -35,7 +93,6 @@ export function DashboardHeader() {
           <Bot className="h-4 w-4" />
           <span className="hidden sm:inline">AI Assistant</span>
         </Button>
-
         <Button variant="ghost" size="icon" className="text-muted-foreground">
           <Search className="h-4 w-4" />
         </Button>
@@ -48,76 +105,80 @@ export function DashboardHeader() {
         </div>
       </div>
 
-      {/* Persistent AI dropdown */}
       <AnimatePresence>
         {aiOpen && (
           <motion.div
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{
-              opacity: 1,
-              y: [0, -4, 0],
-              scale: 1,
-            }}
+            animate={{ opacity: 1, y: [0, -4, 0], scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{
               opacity: { duration: 0.2 },
               scale: { duration: 0.2 },
-              y: {
-                duration: 3,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              },
+              y: { duration: 3, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" },
             }}
-            className="absolute right-4 top-[calc(100%+8px)] z-50 w-80 rounded-lg border bg-popover p-4 text-popover-foreground shadow-lg"
+            className="absolute right-4 top-[calc(100%+8px)] z-50 w-80 rounded-2xl border border-[hsla(195,100%,50%,0.15)] bg-[hsl(220,20%,8%)] p-5 shadow-[0_0_40px_hsla(195,100%,50%,0.1)]"
           >
-            {/* Glow effect */}
-            <div className="absolute -inset-[1px] rounded-lg bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 blur-sm -z-10" />
-
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Bot className="h-5 w-5 text-primary" />
-                </motion.div>
-                <h4 className="font-semibold text-foreground">AI Personal Assistant</h4>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                onClick={() => setAiOpen(false)}
-              >
-                <X className="h-3.5 w-3.5" />
-              </Button>
-            </div>
-
-            <p className="text-sm text-muted-foreground mb-3">
-              Ask anything about your properties, tenants, or tasks.
-            </p>
-
-            <form onSubmit={handleAiSubmit} className="flex gap-2 mb-2">
-              <Input
-                placeholder="Ask AI something..."
-                value={aiQuery}
-                onChange={(e) => setAiQuery(e.target.value)}
-                className="flex-1 text-sm"
-              />
-              <Button type="submit" size="icon" variant="default">
-                <Send className="h-4 w-4" />
-              </Button>
-            </form>
+            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-[hsla(195,100%,50%,0.2)] via-[hsla(200,100%,50%,0.1)] to-[hsla(195,100%,50%,0.2)] blur-sm -z-10" />
 
             <Button
               variant="ghost"
-              size="sm"
-              className="w-full text-muted-foreground hover:text-foreground"
-              onClick={() => navigate("/ai-assistant")}
+              size="icon"
+              className="absolute right-2 top-2 h-6 w-6 text-[hsla(0,0%,100%,0.4)] hover:text-[hsl(0,0%,100%)] hover:bg-[hsla(0,0%,100%,0.08)]"
+              onClick={() => setAiOpen(false)}
             >
-              Open full AI Assistant →
+              <X className="h-3.5 w-3.5" />
             </Button>
+
+            <div className="flex flex-col items-center gap-4 pt-2">
+              <MiniOrb isListening={isListening} />
+
+              <motion.p
+                className="text-xs tracking-widest text-[hsla(195,80%,60%,0.8)]"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                {isListening ? "Listening..." : "Available..."}
+              </motion.p>
+
+              <button
+                onClick={() => setIsListening((p) => !p)}
+                className={`flex h-10 w-10 items-center justify-center rounded-full transition-all ${
+                  isListening
+                    ? "bg-[hsla(195,100%,50%,0.2)] shadow-[0_0_15px_hsla(195,100%,50%,0.3)]"
+                    : "bg-[hsla(0,0%,100%,0.08)] hover:bg-[hsla(0,0%,100%,0.15)]"
+                }`}
+              >
+                <Mic className={`h-4 w-4 ${isListening ? "text-[hsl(195,100%,60%)]" : "text-[hsla(0,0%,100%,0.6)]"}`} />
+              </button>
+
+              <form onSubmit={handleAiSubmit} className="flex w-full gap-2">
+                <div className="flex flex-1 items-center gap-2 rounded-xl border border-[hsla(0,0%,100%,0.08)] bg-[hsla(0,0%,100%,0.04)] px-3 py-2">
+                  <input
+                    type="text"
+                    placeholder="Ask AI something..."
+                    value={aiQuery}
+                    onChange={(e) => setAiQuery(e.target.value)}
+                    className="flex-1 bg-transparent text-sm text-[hsl(0,0%,92%)] placeholder:text-[hsla(0,0%,100%,0.3)] outline-none"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={!aiQuery.trim()}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[hsla(195,100%,50%,0.15)] text-[hsl(195,100%,60%)] transition-all hover:bg-[hsla(195,100%,50%,0.25)] disabled:opacity-30"
+                >
+                  <Send className="h-4 w-4" />
+                </button>
+              </form>
+
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full text-[hsla(0,0%,100%,0.5)] hover:text-[hsl(0,0%,100%)] hover:bg-[hsla(0,0%,100%,0.08)] text-xs"
+                onClick={() => navigate("/ai-assistant")}
+              >
+                Open full AI Assistant →
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
