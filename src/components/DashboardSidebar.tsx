@@ -57,7 +57,7 @@ const portalItems = [
 ];
 
 const bottomItems = [
-  { title: "Settings", icon: Settings },
+  { title: "Settings", icon: Settings, url: "/settings" },
   { title: "Help", icon: HelpCircle },
 ];
 
