@@ -53,9 +53,7 @@ const mainItems = [
 ];
 
 const portalItems = [
-  { title: "Renter Portal", icon: UserCircle, url: "#" },
-  { title: "Rental Provider Portal", icon: Briefcase, url: "#" },
-  { title: "Tradie Portal", icon: HardHat, url: "#" },
+  { title: "Services Portal", icon: Briefcase, url: "/services-portal" },
   { title: "AI Personal Assistant", icon: Bot, url: "/ai-assistant" },
 ];
 
