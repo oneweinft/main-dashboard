@@ -526,16 +526,17 @@ export default function Onboarding() {
                     <CardContent className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label>Owner Name</Label>
-                          <Input placeholder="Enter owner name" />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Email</Label>
-                          <Input type="email" placeholder="owner@example.com" />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Phone</Label>
-                          <Input placeholder="+61 400 000 000" />
+                          <Label>Number of Rental Providers</Label>
+                          <Select value={String(rentalProviderCount)} onValueChange={(v) => setRentalProviderCount(Number(v))}>
+                            <SelectTrigger><SelectValue placeholder="Select number" /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1</SelectItem>
+                              <SelectItem value="2">2</SelectItem>
+                              <SelectItem value="3">3</SelectItem>
+                              <SelectItem value="4">4</SelectItem>
+                              <SelectItem value="5">5+</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                         <div className="space-y-2">
                           <Label>Property Address</Label>
@@ -548,31 +549,66 @@ export default function Onboarding() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <div className="space-y-2">
-                          <Label>Management Agreement Type</Label>
-                          <Select>
-                            <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="exclusive">Exclusive</SelectItem>
-                              <SelectItem value="general">General</SelectItem>
-                              <SelectItem value="letting-only">Letting Only</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Preferred Contact Method</Label>
-                          <Select>
-                            <SelectTrigger><SelectValue placeholder="Select method" /></SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="email">Email</SelectItem>
-                              <SelectItem value="phone">Phone</SelectItem>
-                              <SelectItem value="sms">SMS</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
                       </div>
+
+                      {Array.from({ length: rentalProviderCount }).map((_, idx) => (
+                        <div key={idx} className="space-y-4">
+                          <Separator />
+                          <p className="font-semibold text-sm text-emerald-700">Rental Provider {idx + 1}</p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label>Owner Name</Label>
+                              <Input placeholder={`Enter owner ${idx + 1} name`} />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Email</Label>
+                              <Input type="email" placeholder="owner@example.com" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Phone</Label>
+                              <Input placeholder="+61 400 000 000" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Ownership Share</Label>
+                              <Select>
+                                <SelectTrigger><SelectValue placeholder="Select share" /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="100">100%</SelectItem>
+                                  <SelectItem value="50">50%</SelectItem>
+                                  <SelectItem value="33">33%</SelectItem>
+                                  <SelectItem value="25">25%</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Management Agreement Type</Label>
+                              <Select>
+                                <SelectTrigger><SelectValue placeholder="Select type" /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="exclusive">Exclusive</SelectItem>
+                                  <SelectItem value="general">General</SelectItem>
+                                  <SelectItem value="letting-only">Letting Only</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Preferred Contact Method</Label>
+                              <Select>
+                                <SelectTrigger><SelectValue placeholder="Select method" /></SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="email">Email</SelectItem>
+                                  <SelectItem value="phone">Phone</SelectItem>
+                                  <SelectItem value="sms">SMS</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+
                       <div className="flex justify-end pt-2">
-                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Register Owner</Button>
+                        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Register {rentalProviderCount > 1 ? "Owners" : "Owner"}</Button>
                       </div>
                     </CardContent>
                   </Card>
