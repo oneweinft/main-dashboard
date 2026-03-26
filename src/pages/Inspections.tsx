@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import InspectionScriptBuilder from "@/components/inspections/InspectionScriptBuilder";
+import AIInspectionDigest from "@/components/inspections/AIInspectionDigest";
 
 const inspections = [
   { address: "24 Casterly Rock, NSW", keyNo: "344", beds: 3, baths: 2, cars: 1, type: "Routine", date: "Apr 12, 2026", status: "Scheduled", method: "In-Person" },
@@ -247,8 +249,10 @@ const Inspections = () => {
             </div>
 
             <Tabs value={tab} onValueChange={setTab}>
-              <TabsList>
+              <TabsList className="flex-wrap">
                 <TabsTrigger value="schedule">Schedule</TabsTrigger>
+                <TabsTrigger value="scripts">Scripts</TabsTrigger>
+                <TabsTrigger value="ai-digest">AI Digest</TabsTrigger>
                 <TabsTrigger value="recordings">Recordings ({pastRecordings.length})</TabsTrigger>
                 <TabsTrigger value="map">Map View</TabsTrigger>
               </TabsList>
@@ -349,6 +353,16 @@ const Inspections = () => {
                     </div>
                   </div>
                 </div>
+              </TabsContent>
+
+              {/* Scripts Tab */}
+              <TabsContent value="scripts" className="mt-4">
+                <InspectionScriptBuilder />
+              </TabsContent>
+
+              {/* AI Digest Tab */}
+              <TabsContent value="ai-digest" className="mt-4">
+                <AIInspectionDigest />
               </TabsContent>
 
               {/* Recordings Tab */}

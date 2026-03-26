@@ -37,6 +37,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from "react-router-dom";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
@@ -359,6 +361,39 @@ const RenterPortal = () => {
                     <PlayCircle className="h-3 w-3" /> Play
                   </Button>
                 </div>
+              ))}
+            </div>
+
+            {/* Room-by-Room Inspection Guide from PM */}
+            <h3 className="text-sm font-bold text-foreground mt-6">Your Inspection Walkthrough Guide</h3>
+            <p className="text-xs text-muted-foreground mb-2">Follow these room-by-room instructions during your virtual inspection. Your property manager will guide you live on Zoom/Teams.</p>
+            <div className="space-y-2">
+              {[
+                { room: "1. Front Entry & Exterior", time: "~3 min", items: ["Front door condition (locks, hinges, paint)", "External walls & gutters visible", "Garden / lawn condition"], instructions: "Start at the front of the property. Pan the camera slowly across the front facade, driveway, letterbox, and entry path." },
+                { room: "2. Living Room", time: "~3 min", items: ["Walls — marks, holes, or damage", "Ceiling — stains, cracks, or mould", "Flooring condition", "Windows & blinds operational"], instructions: "Enter the living area. Show the full room with a slow 360° pan. Focus on walls, ceiling, flooring, and windows." },
+                { room: "3. Kitchen", time: "~4 min", items: ["Benchtops & splashback clean", "Sink & tapware — no leaks", "Oven & cooktop working", "Cupboard doors & drawers"], instructions: "Show the kitchen benchtops, splashback, sink, and tapware. Open cupboards briefly. Run the tap." },
+                { room: "4. Bedroom 1 (Main)", time: "~3 min", items: ["Walls, ceiling & flooring", "Built-in wardrobe condition", "Windows, locks & blinds"], instructions: "Enter the main bedroom. Slow pan of walls, ceiling, flooring. Open wardrobe to show condition." },
+                { room: "5. Bathroom", time: "~4 min", items: ["Tiles & grout — no cracks or mould", "Shower screen & tapware", "Toilet — flush test", "Exhaust fan operational"], instructions: "Show the full bathroom. Focus on tiles, grout, shower screen. Run the shower briefly." },
+                { room: "6. Laundry", time: "~2 min", items: ["Laundry tub & tapware", "Hot & cold water connections"], instructions: "Show the laundry tub, tapware, and any appliance connections." },
+                { room: "7. Safety & Compliance", time: "~2 min", items: ["Smoke alarm — test each one", "Safety switch — identified on switchboard"], instructions: "Locate all smoke alarms and press the test button on each." },
+              ].map((section, idx) => (
+                <Card key={idx} className="border-border">
+                  <CardContent className="p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold text-foreground">{section.room}</p>
+                      <Badge variant="outline" className="text-[10px]">{section.time}</Badge>
+                    </div>
+                    <p className="text-xs text-muted-foreground italic">{section.instructions}</p>
+                    <div className="space-y-1">
+                      {section.items.map((item, j) => (
+                        <label key={j} className="flex items-center gap-2 text-xs text-foreground cursor-pointer">
+                          <Checkbox />
+                          {item}
+                        </label>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
