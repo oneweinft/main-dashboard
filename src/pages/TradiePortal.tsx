@@ -87,19 +87,24 @@ const payments: Payment[] = [
 ];
 
 type CommLog = {
-  type: "Email" | "SMS" | "AI Call";
+  type: "Email" | "SMS" | "AI Call" | "Photo" | "Video";
   direction: "Inbound" | "Outbound";
   contact: string;
   subject: string;
   time: string;
   status: "Sent" | "Received" | "Missed";
+  attachments?: { type: "photo" | "video"; name: string }[];
+  workOrder?: string;
 };
 
 const commLogs: CommLog[] = [
+  { type: "Photo", direction: "Outbound", contact: "Property Manager", subject: "Before photos — WO-1024 hot water system", time: "5 min ago", status: "Sent", attachments: [{ type: "photo", name: "before_1.jpg" }, { type: "photo", name: "before_2.jpg" }], workOrder: "WO-1024" },
   { type: "Email", direction: "Outbound", contact: "tenant@email.com", subject: "Work order WO-1024 update", time: "10 min ago", status: "Sent" },
+  { type: "Video", direction: "Outbound", contact: "Property Manager", subject: "Video walkthrough — blocked drain WO-1023", time: "30 min ago", status: "Sent", attachments: [{ type: "video", name: "drain_issue.mp4" }], workOrder: "WO-1023" },
   { type: "SMS", direction: "Outbound", contact: "0412 345 678", subject: "Arrival ETA — 2:30 PM today", time: "1 hr ago", status: "Sent" },
   { type: "AI Call", direction: "Outbound", contact: "Property Manager", subject: "Schedule confirmation for WO-1023", time: "2 hrs ago", status: "Sent" },
   { type: "Email", direction: "Inbound", contact: "pm@agency.com", subject: "Approval for WO-1022 received", time: "3 hrs ago", status: "Received" },
+  { type: "Photo", direction: "Outbound", contact: "Property Manager", subject: "After photos — WO-1021 tap repair complete", time: "6 hrs ago", status: "Sent", attachments: [{ type: "photo", name: "after_1.jpg" }, { type: "photo", name: "after_2.jpg" }], workOrder: "WO-1021" },
   { type: "SMS", direction: "Inbound", contact: "0423 456 789", subject: "Tenant confirms access for Thursday", time: "5 hrs ago", status: "Received" },
   { type: "AI Call", direction: "Inbound", contact: "Tenant — Unit 3B", subject: "Missed call — voicemail left", time: "Yesterday", status: "Missed" },
 ];
