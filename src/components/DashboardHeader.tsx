@@ -106,9 +106,9 @@ export function DashboardHeader() {
   const [rentAmount, setRentAmount] = useState("550");
   const navigate = useNavigate();
 
-  const weeklyRent = useMemo(() => {
+  const dailyRate = useMemo(() => {
     const val = parseFloat(rentAmount) || 0;
-    return val * periodToWeekly[rentInputPeriod];
+    return val * periodToDailyFactor[rentInputPeriod];
   }, [rentAmount, rentInputPeriod]);
 
   const rentBreakdown = useMemo(() => {
@@ -116,10 +116,10 @@ export function DashboardHeader() {
     return periods.map((p) => ({
       period: p,
       label: periodLabels[p],
-      amount: weeklyRent * weeklyToPeriod[p],
+      amount: dailyRate * dailyToPeriodFactor[p],
       isInput: p === rentInputPeriod,
     }));
-  }, [weeklyRent, rentInputPeriod]);
+  }, [dailyRate, rentInputPeriod]);
 
   const handleAiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
