@@ -100,6 +100,21 @@ const Financials = () => {
   // Property performance state
   const [selectedProperty, setSelectedProperty] = useState<string>("all");
   const [dateRange, setDateRange] = useState<[number, number]>([2010, currentYear]);
+  const [customWeeklyRent, setCustomWeeklyRent] = useState<string>("");
+
+  const handleDateFromChange = (val: string) => {
+    const num = parseInt(val);
+    if (!isNaN(num) && num >= 2000 && num <= dateRange[1]) setDateRange([num, dateRange[1]]);
+  };
+  const handleDateToChange = (val: string) => {
+    const num = parseInt(val);
+    if (!isNaN(num) && num >= dateRange[0] && num <= currentYear) setDateRange([dateRange[0], num]);
+  };
+
+  const effectiveWeeklyRent = customWeeklyRent ? parseFloat(customWeeklyRent) : null;
+  const annualFromCustom = effectiveWeeklyRent ? Math.round(effectiveWeeklyRent * 52) : null;
+  const monthlyFromCustom = effectiveWeeklyRent ? Math.round(effectiveWeeklyRent * 52 / 12) : null;
+  const fortnightlyFromCustom = effectiveWeeklyRent ? Math.round(effectiveWeeklyRent * 2) : null;
 
   const perfData = useMemo(() => {
     if (selectedProperty === "all") {
