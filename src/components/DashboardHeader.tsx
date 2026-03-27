@@ -77,22 +77,24 @@ const periodLabels: Record<RentPeriod, string> = {
   yearly: "Yearly",
 };
 
-const periodToWeekly: Record<RentPeriod, number> = {
-  daily: 7,
-  weekly: 1,
-  fortnightly: 1 / 2,
-  monthly: 12 / 52,
-  "6monthly": 2 / 52,
-  yearly: 1 / 52,
+// Convert any period amount to a daily rate
+const periodToDailyFactor: Record<RentPeriod, number> = {
+  daily: 1,
+  weekly: 1 / 7,
+  fortnightly: 1 / 14,
+  monthly: 12 / 365,
+  "6monthly": 2 / 365,
+  yearly: 1 / 365,
 };
 
-const weeklyToPeriod: Record<RentPeriod, number> = {
-  daily: 1 / 7,
-  weekly: 1,
-  fortnightly: 2,
-  monthly: 52 / 12,
-  "6monthly": 52 / 2,
-  yearly: 52,
+// Convert a daily rate to each period amount
+const dailyToPeriodFactor: Record<RentPeriod, number> = {
+  daily: 1,
+  weekly: 7,
+  fortnightly: 14,
+  monthly: 365 / 12,
+  "6monthly": 365 / 2,
+  yearly: 365,
 };
 
 export function DashboardHeader() {
@@ -104,9 +106,9 @@ export function DashboardHeader() {
   const [rentAmount, setRentAmount] = useState("550");
   const navigate = useNavigate();
 
-  const weeklyRent = useMemo(() => {
+  const dailyRate = useMemo(() => {
     const val = parseFloat(rentAmount) || 0;
-    return val * periodToWeekly[rentInputPeriod];
+    return val * periodToDailyFactor[rentInputPeriod];
   }, [rentAmount, rentInputPeriod]);
 
   const rentBreakdown = useMemo(() => {
@@ -114,10 +116,10 @@ export function DashboardHeader() {
     return periods.map((p) => ({
       period: p,
       label: periodLabels[p],
-      amount: weeklyRent * weeklyToPeriod[p],
+      amount: dailyRate * dailyToPeriodFactor[p],
       isInput: p === rentInputPeriod,
     }));
-  }, [weeklyRent, rentInputPeriod]);
+  }, [dailyRate, rentInputPeriod]);
 
   const handleAiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
