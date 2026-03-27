@@ -4,9 +4,13 @@ import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+} from "@/components/ui/dialog";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -145,10 +149,61 @@ function ContactTable({ contacts, filter }: { contacts: Contact[]; filter: strin
   );
 }
 
+const contactTypeOptions = [
+  { value: "renter", label: "Renter" },
+  { value: "provider", label: "Rental Provider" },
+  { value: "trade", label: "Trade" },
+  { value: "service", label: "Service Provider" },
+  { value: "other", label: "Other" },
+];
+
 const Contacts = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [addOpen, setAddOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPhone, setNewPhone] = useState("");
+  const [newProperty, setNewProperty] = useState("");
+  const [newType, setNewType] = useState("renter");
   const { aiLogs } = useData();
+
+  const [localContacts, setLocalContacts] = useState<Contact[]>([]);
+
+  const resetForm = () => {
+    setNewName(""); setNewEmail(""); setNewPhone(""); setNewProperty(""); setNewType("renter");
+  };
+
+  const handleAddContact = () => {
+    if (!newName.trim()) return;
+    const contact: Contact = {
+      id: Date.now(),
+      name: newName.trim(),
+      email: newEmail.trim() || "—",
+      phone: newPhone.trim() || "—",
+      property: newProperty.trim() || undefined,
+      status: "active",
+      type: newType,
+    };
+    setLocalContacts(prev => [...prev, contact]);
+    resetForm();
+    setAddOpen(false);
+  };
+
+  const getTabData = (baseData: Contact[], type: string) => {
+    const extra = localContacts.filter(c => c.type === type);
+    return [...baseData, ...extra];
+  };
+
+  const tabConfigWithData = tabConfig.map(tab => ({
+    ...tab,
+    data: tab.value === "renters" ? getTabData(tab.data, "renter")
+      : tab.value === "providers" ? getTabData(tab.data, "provider")
+      : tab.value === "properties" ? getTabData(tab.data, "property")
+      : tab.value === "trades" ? getTabData(tab.data, "trade")
+      : tab.value === "services" ? getTabData(tab.data, "service")
+      : getTabData(tab.data, "other"),
+  }));
 
   return (
     <SidebarProvider>
@@ -169,7 +224,7 @@ const Contacts = () => {
                     <p className="text-sm text-muted-foreground">Manage all your contacts in one place</p>
                   </div>
                 </div>
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setAddOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" /> Add Contact
                 </Button>
               </div>
@@ -216,7 +271,7 @@ const Contacts = () => {
                   </TabsTrigger>
                 </TabsList>
 
-                {tabConfig.map((tab) => (
+                {tabConfigWithData.map((tab) => (
                   <TabsContent key={tab.value} value={tab.value}>
                     <div className="bg-card rounded-xl border border-border p-6">
                       <div className="flex items-center justify-between mb-4">
@@ -272,6 +327,51 @@ const Contacts = () => {
           </main>
         </div>
       </div>
+      {/* Add Contact Dialog */}
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New Contact</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label className="text-sm">Contact Type</Label>
+              <Select value={newType} onValueChange={setNewType}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {contactTypeOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Name *</Label>
+              <Input placeholder="Full name or business name" value={newName} onChange={(e) => setNewName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAddContact()} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-sm">Email</Label>
+                <Input type="email" placeholder="email@example.com" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Phone</Label>
+                <Input placeholder="0400 000 000" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Property (optional)</Label>
+              <Input placeholder="Linked property address" value={newProperty} onChange={(e) => setNewProperty(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { resetForm(); setAddOpen(false); }}>Cancel</Button>
+            <Button onClick={handleAddContact} disabled={!newName.trim()} className="bg-primary hover:bg-primary/90">
+              <Plus className="h-4 w-4 mr-1" /> Add Contact
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };
