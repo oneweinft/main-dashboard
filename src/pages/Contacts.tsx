@@ -271,7 +271,7 @@ const Contacts = () => {
                   </TabsTrigger>
                 </TabsList>
 
-                {tabConfig.map((tab) => (
+                {tabConfigWithData.map((tab) => (
                   <TabsContent key={tab.value} value={tab.value}>
                     <div className="bg-card rounded-xl border border-border p-6">
                       <div className="flex items-center justify-between mb-4">
