@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mic, Send, ArrowLeft, MessageSquare, Home, Settings, Volume2, VolumeX, Brain, Bell, BellOff, Zap, Globe, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useData } from "@/context/DataContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -91,6 +92,7 @@ export default function AIAssistant() {
   const [showChat, setShowChat] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { addAILog } = useData();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -106,20 +108,26 @@ export default function AIAssistant() {
 
   const handleSend = () => {
     if (!input.trim() || !aiEnabled) return;
-    const userMsg: Message = { role: "user", content: input.trim() };
+    const queryText = input.trim();
+    const userMsg: Message = { role: "user", content: queryText };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setShowChat(true);
 
+    const responseText =
+      "I'm your PM Dashboard AI assistant. I can help you manage properties, track maintenance requests, analyse arrears, and more. What would you like to know?";
+
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
-        {
-          role: "assistant",
-          content:
-            "I'm your PM Dashboard AI assistant. I can help you manage properties, track maintenance requests, analyse arrears, and more. What would you like to know?",
-        },
+        { role: "assistant", content: responseText },
       ]);
+      addAILog({
+        timestamp: new Date().toISOString(),
+        query: queryText,
+        response: responseText,
+        source: "assistant",
+      });
     }, 1200);
   };
 

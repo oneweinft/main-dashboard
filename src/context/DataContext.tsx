@@ -41,16 +41,26 @@ export interface Contact {
   contactType: ContactType;
 }
 
+export interface AILog {
+  id: string;
+  timestamp: string;
+  query: string;
+  response: string;
+  source: "assistant" | "header-widget";
+}
+
 interface DataContextType {
   properties: Property[];
   transactions: Transaction[];
   contacts: Contact[];
+  aiLogs: AILog[];
   addProperty: (p: Omit<Property, "id">) => void;
   addProperties: (ps: Omit<Property, "id">[]) => void;
   addTransaction: (t: Omit<Transaction, "id">) => void;
   addTransactions: (ts: Omit<Transaction, "id">[]) => void;
   addContact: (c: Omit<Contact, "id">) => void;
   addContacts: (cs: Omit<Contact, "id">[]) => void;
+  addAILog: (log: Omit<AILog, "id">) => void;
 }
 
 const defaultProperties: Property[] = [
@@ -97,6 +107,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [properties, setProperties] = useState<Property[]>(defaultProperties);
   const [transactions, setTransactions] = useState<Transaction[]>(defaultTransactions);
   const [contacts, setContacts] = useState<Contact[]>(defaultContacts);
+  const [aiLogs, setAILogs] = useState<AILog[]>([]);
 
   const addProperty = useCallback((p: Omit<Property, "id">) => {
     setProperties((prev) => [...prev, { ...p, id: genId("p") }]);
@@ -116,9 +127,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const addContacts = useCallback((cs: Omit<Contact, "id">[]) => {
     setContacts((prev) => [...prev, ...cs.map((c) => ({ ...c, id: genId("c") }))]);
   }, []);
+  const addAILog = useCallback((log: Omit<AILog, "id">) => {
+    setAILogs((prev) => [{ ...log, id: genId("ai") }, ...prev]);
+  }, []);
 
   return (
-    <DataContext.Provider value={{ properties, transactions, contacts, addProperty, addProperties, addTransaction, addTransactions, addContact, addContacts }}>
+    <DataContext.Provider value={{ properties, transactions, contacts, aiLogs, addProperty, addProperties, addTransaction, addTransactions, addContact, addContacts, addAILog }}>
       {children}
     </DataContext.Provider>
   );
