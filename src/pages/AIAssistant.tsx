@@ -96,8 +96,16 @@ export default function AIAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const [aiEnabled, setAiEnabled] = useState(true);
+  const [volume, setVolume] = useState([70]);
+  const [notifications, setNotifications] = useState(true);
+  const [voiceResponse, setVoiceResponse] = useState(false);
+  const [responseSpeed, setResponseSpeed] = useState("balanced");
+  const [language, setLanguage] = useState("en");
+  const [safeMode, setSafeMode] = useState(true);
+
   const handleSend = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !aiEnabled) return;
     const userMsg: Message = { role: "user", content: input.trim() };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
