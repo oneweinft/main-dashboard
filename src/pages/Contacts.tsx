@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/table";
 import {
   Users, Search, Plus, Mail, Phone, Building2, Archive, UserCheck,
-  Wrench, Briefcase, UserPlus, Filter,
+  Wrench, Briefcase, UserPlus, Filter, Bot, MessageSquare,
 } from "lucide-react";
+import { useData } from "@/context/DataContext";
 
 type Contact = {
   id: number;
