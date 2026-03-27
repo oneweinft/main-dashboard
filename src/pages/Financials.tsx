@@ -85,6 +85,8 @@ const statusColor: Record<Transaction["status"], string> = {
   failed: "bg-red-500/15 text-red-400 border-red-500/30",
 };
 
+const currentYear = new Date().getFullYear();
+
 const Financials = () => {
   const { transactions, addTransaction, properties } = useData();
   const { toast } = useToast();
@@ -94,6 +96,36 @@ const Financials = () => {
   const [txFilter, setTxFilter] = useState("all");
   const [addOpen, setAddOpen] = useState(false);
   const [form, setForm] = useState({ date: new Date().toISOString().slice(0, 10), description: "", property: "", category: "Rent", type: "income" as "income" | "expense", amount: "", status: "completed" as Transaction["status"] });
+
+  // Property performance state
+  const [selectedProperty, setSelectedProperty] = useState<string>("all");
+  const [dateRange, setDateRange] = useState<[number, number]>([2010, currentYear]);
+
+  const perfData = useMemo(() => {
+    if (selectedProperty === "all") {
+      // Aggregate across all properties
+      const allData: Record<string, { annualRental: number; propertyValue: number; capitalGain: number; count: number }> = {};
+      properties.forEach((p) => {
+        const pData = generatePropertyPerformance(p.address, dateRange[0], dateRange[1]);
+        pData.forEach((d) => {
+          if (!allData[d.year]) allData[d.year] = { annualRental: 0, propertyValue: 0, capitalGain: 0, count: 0 };
+          allData[d.year].annualRental += d.annualRental;
+          allData[d.year].propertyValue += d.propertyValue;
+          allData[d.year].capitalGain += d.capitalGain;
+          allData[d.year].count += 1;
+        });
+      });
+      return Object.entries(allData).map(([year, d]) => ({
+        year,
+        annualRental: d.annualRental,
+        propertyValue: Math.round(d.propertyValue / d.count),
+        capitalGain: d.capitalGain,
+        weeklyRent: Math.round(d.annualRental / 52),
+        yieldPct: parseFloat((d.annualRental / d.propertyValue * 100).toFixed(1)),
+      }));
+    }
+    return generatePropertyPerformance(selectedProperty, dateRange[0], dateRange[1]);
+  }, [selectedProperty, dateRange, properties]);
 
   const totalIncome = transactions.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);
   const totalExpenses = transactions.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0);
