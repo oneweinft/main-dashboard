@@ -149,10 +149,61 @@ function ContactTable({ contacts, filter }: { contacts: Contact[]; filter: strin
   );
 }
 
+const contactTypeOptions = [
+  { value: "renter", label: "Renter" },
+  { value: "provider", label: "Rental Provider" },
+  { value: "trade", label: "Trade" },
+  { value: "service", label: "Service Provider" },
+  { value: "other", label: "Other" },
+];
+
 const Contacts = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [addOpen, setAddOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPhone, setNewPhone] = useState("");
+  const [newProperty, setNewProperty] = useState("");
+  const [newType, setNewType] = useState("renter");
   const { aiLogs } = useData();
+
+  const [localContacts, setLocalContacts] = useState<Contact[]>([]);
+
+  const resetForm = () => {
+    setNewName(""); setNewEmail(""); setNewPhone(""); setNewProperty(""); setNewType("renter");
+  };
+
+  const handleAddContact = () => {
+    if (!newName.trim()) return;
+    const contact: Contact = {
+      id: Date.now(),
+      name: newName.trim(),
+      email: newEmail.trim() || "—",
+      phone: newPhone.trim() || "—",
+      property: newProperty.trim() || undefined,
+      status: "active",
+      type: newType,
+    };
+    setLocalContacts(prev => [...prev, contact]);
+    resetForm();
+    setAddOpen(false);
+  };
+
+  const getTabData = (baseData: Contact[], type: string) => {
+    const extra = localContacts.filter(c => c.type === type);
+    return [...baseData, ...extra];
+  };
+
+  const tabConfigWithData = tabConfig.map(tab => ({
+    ...tab,
+    data: tab.value === "renters" ? getTabData(tab.data, "renter")
+      : tab.value === "providers" ? getTabData(tab.data, "provider")
+      : tab.value === "properties" ? getTabData(tab.data, "property")
+      : tab.value === "trades" ? getTabData(tab.data, "trade")
+      : tab.value === "services" ? getTabData(tab.data, "service")
+      : getTabData(tab.data, "other"),
+  }));
 
   return (
     <SidebarProvider>
@@ -173,7 +224,7 @@ const Contacts = () => {
                     <p className="text-sm text-muted-foreground">Manage all your contacts in one place</p>
                   </div>
                 </div>
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setAddOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" /> Add Contact
                 </Button>
               </div>
