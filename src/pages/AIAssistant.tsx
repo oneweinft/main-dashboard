@@ -1,8 +1,24 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Send, ArrowLeft, MessageSquare, Home } from "lucide-react";
+import { Mic, Send, ArrowLeft, MessageSquare, Home, Settings, Volume2, VolumeX, Brain, Bell, BellOff, Zap, Globe, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -80,8 +96,16 @@ export default function AIAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const [aiEnabled, setAiEnabled] = useState(true);
+  const [volume, setVolume] = useState([70]);
+  const [notifications, setNotifications] = useState(true);
+  const [voiceResponse, setVoiceResponse] = useState(false);
+  const [responseSpeed, setResponseSpeed] = useState("balanced");
+  const [language, setLanguage] = useState("en");
+  const [safeMode, setSafeMode] = useState(true);
+
   const handleSend = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || !aiEnabled) return;
     const userMsg: Message = { role: "user", content: input.trim() };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
@@ -148,6 +172,109 @@ export default function AIAssistant() {
           >
             <MessageSquare className="mr-1 h-4 w-4" /> Chat
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <Settings className="mr-1 h-4 w-4" /> Settings
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-72 p-4 space-y-4">
+              <DropdownMenuLabel className="text-base font-semibold px-0">AI Assistant Settings</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+
+              {/* AI On/Off */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">AI Enabled</span>
+                </div>
+                <Switch checked={aiEnabled} onCheckedChange={setAiEnabled} />
+              </div>
+
+              {/* Volume */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {volume[0] > 0 ? <Volume2 className="h-4 w-4 text-primary" /> : <VolumeX className="h-4 w-4 text-muted-foreground" />}
+                    <span className="text-sm font-medium">Volume</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">{volume[0]}%</span>
+                </div>
+                <Slider value={volume} onValueChange={setVolume} max={100} step={5} className="w-full" />
+              </div>
+
+              {/* Voice Response */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Mic className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Voice Responses</span>
+                </div>
+                <Switch checked={voiceResponse} onCheckedChange={setVoiceResponse} />
+              </div>
+
+              {/* Notifications */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {notifications ? <Bell className="h-4 w-4 text-primary" /> : <BellOff className="h-4 w-4 text-muted-foreground" />}
+                  <span className="text-sm font-medium">Notifications</span>
+                </div>
+                <Switch checked={notifications} onCheckedChange={setNotifications} />
+              </div>
+
+              <DropdownMenuSeparator />
+
+              {/* Response Speed */}
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <Brain className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Response Mode</span>
+                </div>
+                <Select value={responseSpeed} onValueChange={setResponseSpeed}>
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="fast">Fast — Quick answers</SelectItem>
+                    <SelectItem value="balanced">Balanced — Default</SelectItem>
+                    <SelectItem value="thorough">Thorough — Detailed analysis</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Language */}
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <Globe className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Language</span>
+                </div>
+                <Select value={language} onValueChange={setLanguage}>
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="es">Spanish</SelectItem>
+                    <SelectItem value="fr">French</SelectItem>
+                    <SelectItem value="zh">Chinese</SelectItem>
+                    <SelectItem value="ar">Arabic</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Safe Mode */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Safe Mode</span>
+                </div>
+                <Switch checked={safeMode} onCheckedChange={setSafeMode} />
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
