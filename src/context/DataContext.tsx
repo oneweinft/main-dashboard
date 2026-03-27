@@ -107,6 +107,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [properties, setProperties] = useState<Property[]>(defaultProperties);
   const [transactions, setTransactions] = useState<Transaction[]>(defaultTransactions);
   const [contacts, setContacts] = useState<Contact[]>(defaultContacts);
+  const [aiLogs, setAILogs] = useState<AILog[]>([]);
 
   const addProperty = useCallback((p: Omit<Property, "id">) => {
     setProperties((prev) => [...prev, { ...p, id: genId("p") }]);
@@ -126,9 +127,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const addContacts = useCallback((cs: Omit<Contact, "id">[]) => {
     setContacts((prev) => [...prev, ...cs.map((c) => ({ ...c, id: genId("c") }))]);
   }, []);
+  const addAILog = useCallback((log: Omit<AILog, "id">) => {
+    setAILogs((prev) => [{ ...log, id: genId("ai") }, ...prev]);
+  }, []);
 
   return (
-    <DataContext.Provider value={{ properties, transactions, contacts, addProperty, addProperties, addTransaction, addTransactions, addContact, addContacts }}>
+    <DataContext.Provider value={{ properties, transactions, contacts, aiLogs, addProperty, addProperties, addTransaction, addTransactions, addContact, addContacts, addAILog }}>
       {children}
     </DataContext.Provider>
   );
