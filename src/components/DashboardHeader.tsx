@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Bell, Search, Bot, Send, X, Mic, Menu } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Bell, Search, Bot, Send, X, Mic, Calculator, DollarSign } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
