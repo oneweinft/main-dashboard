@@ -137,7 +137,16 @@ export function DashboardHeader() {
           variant="outline"
           size="sm"
           className="gap-1.5 sm:gap-2 text-primary border-primary/30 hover:bg-primary/10 h-8 px-2 sm:px-3"
-          onClick={() => setAiOpen((prev) => !prev)}
+          onClick={() => { setRentOpen((prev) => !prev); setAiOpen(false); }}
+        >
+          <Calculator className="h-4 w-4" />
+          <span className="hidden md:inline text-sm">Rent Calc</span>
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-1.5 sm:gap-2 text-primary border-primary/30 hover:bg-primary/10 h-8 px-2 sm:px-3"
+          onClick={() => { setAiOpen((prev) => !prev); setRentOpen(false); }}
         >
           <Bot className="h-4 w-4" />
           <span className="hidden md:inline text-sm">AI Assistant</span>
