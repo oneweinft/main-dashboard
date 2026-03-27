@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -19,14 +20,37 @@ import {
 } from "@/components/ui/dialog";
 import {
   DollarSign, TrendingUp, TrendingDown, Download, Upload, FileSpreadsheet,
-  ArrowUpRight, ArrowDownRight, PieChart, FileText, Search, Plus, BarChart3,
+  ArrowUpRight, ArrowDownRight, PieChart, FileText, Search, Plus, BarChart3, Building2, CalendarRange,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid,
+  LineChart, Line, Area, AreaChart, Legend,
 } from "recharts";
 import { useData, type Transaction } from "@/context/DataContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+
+// Generate simulated property performance data for a given property
+function generatePropertyPerformance(propertyAddress: string, startYear: number, endYear: number) {
+  const seed = propertyAddress.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const baseRent = 400 + (seed % 800);
+  const baseValue = 300000 + (seed % 500000);
+  const data = [];
+  for (let y = startYear; y <= endYear; y++) {
+    const yearIdx = y - 2000;
+    const rentGrowth = 1 + (0.025 + (seed % 3) * 0.005) * yearIdx + Math.sin(yearIdx * 0.5) * 0.02;
+    const capitalGrowth = 1 + (0.04 + (seed % 5) * 0.003) * yearIdx + Math.sin(yearIdx * 0.3) * 0.03;
+    data.push({
+      year: y.toString(),
+      weeklyRent: Math.round(baseRent * rentGrowth),
+      annualRental: Math.round(baseRent * rentGrowth * 52),
+      propertyValue: Math.round(baseValue * capitalGrowth),
+      capitalGain: Math.round(baseValue * capitalGrowth - baseValue),
+      yieldPct: parseFloat(((baseRent * rentGrowth * 52) / (baseValue * capitalGrowth) * 100).toFixed(1)),
+    });
+  }
+  return data;
+}
 
 const revenueData = [
   { month: "Jul", income: 82400, expenses: 31200 },
