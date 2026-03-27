@@ -41,16 +41,26 @@ export interface Contact {
   contactType: ContactType;
 }
 
+export interface AILog {
+  id: string;
+  timestamp: string;
+  query: string;
+  response: string;
+  source: "assistant" | "header-widget";
+}
+
 interface DataContextType {
   properties: Property[];
   transactions: Transaction[];
   contacts: Contact[];
+  aiLogs: AILog[];
   addProperty: (p: Omit<Property, "id">) => void;
   addProperties: (ps: Omit<Property, "id">[]) => void;
   addTransaction: (t: Omit<Transaction, "id">) => void;
   addTransactions: (ts: Omit<Transaction, "id">[]) => void;
   addContact: (c: Omit<Contact, "id">) => void;
   addContacts: (cs: Omit<Contact, "id">[]) => void;
+  addAILog: (log: Omit<AILog, "id">) => void;
 }
 
 const defaultProperties: Property[] = [
