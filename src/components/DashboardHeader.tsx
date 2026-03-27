@@ -66,11 +66,58 @@ function MiniOrb({ isListening }: { isListening: boolean }) {
   );
 }
 
+type RentPeriod = "daily" | "weekly" | "fortnightly" | "monthly" | "6monthly" | "yearly";
+
+const periodLabels: Record<RentPeriod, string> = {
+  daily: "Daily",
+  weekly: "Weekly",
+  fortnightly: "Fortnightly",
+  monthly: "Calendar monthly",
+  "6monthly": "6 monthly",
+  yearly: "Yearly",
+};
+
+const periodToWeekly: Record<RentPeriod, number> = {
+  daily: 7,
+  weekly: 1,
+  fortnightly: 1 / 2,
+  monthly: 12 / 52,
+  "6monthly": 2 / 52,
+  yearly: 1 / 52,
+};
+
+const weeklyToPeriod: Record<RentPeriod, number> = {
+  daily: 1 / 7,
+  weekly: 1,
+  fortnightly: 2,
+  monthly: 52 / 12,
+  "6monthly": 52 / 2,
+  yearly: 52,
+};
+
 export function DashboardHeader() {
   const [aiQuery, setAiQuery] = useState("");
   const [aiOpen, setAiOpen] = useState(false);
+  const [rentOpen, setRentOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [rentInputPeriod, setRentInputPeriod] = useState<RentPeriod>("weekly");
+  const [rentAmount, setRentAmount] = useState("550");
   const navigate = useNavigate();
+
+  const weeklyRent = useMemo(() => {
+    const val = parseFloat(rentAmount) || 0;
+    return val * periodToWeekly[rentInputPeriod];
+  }, [rentAmount, rentInputPeriod]);
+
+  const rentBreakdown = useMemo(() => {
+    const periods: RentPeriod[] = ["daily", "weekly", "fortnightly", "monthly", "6monthly", "yearly"];
+    return periods.map((p) => ({
+      period: p,
+      label: periodLabels[p],
+      amount: weeklyRent * weeklyToPeriod[p],
+      isInput: p === rentInputPeriod,
+    }));
+  }, [weeklyRent, rentInputPeriod]);
 
   const handleAiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
