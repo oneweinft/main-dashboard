@@ -327,6 +327,51 @@ const Contacts = () => {
           </main>
         </div>
       </div>
+      {/* Add Contact Dialog */}
+      <Dialog open={addOpen} onOpenChange={setAddOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New Contact</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label className="text-sm">Contact Type</Label>
+              <Select value={newType} onValueChange={setNewType}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {contactTypeOptions.map(o => (
+                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Name *</Label>
+              <Input placeholder="Full name or business name" value={newName} onChange={(e) => setNewName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleAddContact()} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-sm">Email</Label>
+                <Input type="email" placeholder="email@example.com" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Phone</Label>
+                <Input placeholder="0400 000 000" value={newPhone} onChange={(e) => setNewPhone(e.target.value)} />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Property (optional)</Label>
+              <Input placeholder="Linked property address" value={newProperty} onChange={(e) => setNewProperty(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { resetForm(); setAddOpen(false); }}>Cancel</Button>
+            <Button onClick={handleAddContact} disabled={!newName.trim()} className="bg-primary hover:bg-primary/90">
+              <Plus className="h-4 w-4 mr-1" /> Add Contact
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 };
