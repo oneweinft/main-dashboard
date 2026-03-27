@@ -148,6 +148,7 @@ function ContactTable({ contacts, filter }: { contacts: Contact[]; filter: strin
 const Contacts = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const { aiLogs } = useData();
 
   return (
     <SidebarProvider>
