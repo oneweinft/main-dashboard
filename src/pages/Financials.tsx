@@ -301,10 +301,17 @@ const Financials = () => {
                   <div className="flex-1 max-w-md">
                     <Label className="text-sm font-medium text-foreground mb-1.5 block">
                       <CalendarRange className="inline h-4 w-4 mr-1 text-primary" />
-                      Date Range: {dateRange[0]} – {dateRange[1]}
+                      Date Range
                     </Label>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-muted-foreground">2000</span>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        min={2000}
+                        max={dateRange[1]}
+                        value={dateRange[0]}
+                        onChange={(e) => handleDateFromChange(e.target.value)}
+                        className="w-20 text-center text-sm"
+                      />
                       <Slider
                         min={2000}
                         max={currentYear}
@@ -313,10 +320,59 @@ const Financials = () => {
                         onValueChange={(v) => setDateRange(v as [number, number])}
                         className="flex-1"
                       />
-                      <span className="text-xs text-muted-foreground">{currentYear}</span>
+                      <Input
+                        type="number"
+                        min={dateRange[0]}
+                        max={currentYear}
+                        value={dateRange[1]}
+                        onChange={(e) => handleDateToChange(e.target.value)}
+                        className="w-20 text-center text-sm"
+                      />
                     </div>
                   </div>
                 </div>
+
+                {/* Editable Weekly Rent + Auto Calculations */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base font-bold text-primary">Rent Calculator</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Weekly Rent ($)</Label>
+                        <Input
+                          type="number"
+                          placeholder={perfData.length > 0 ? perfData[perfData.length - 1].weeklyRent?.toString() : "0"}
+                          value={customWeeklyRent}
+                          onChange={(e) => setCustomWeeklyRent(e.target.value)}
+                          className="mt-1 text-lg font-bold"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {!customWeeklyRent && perfData.length > 0 ? `Default: $${perfData[perfData.length - 1].weeklyRent}/wk` : "Enter custom amount"}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border border-border p-3">
+                        <p className="text-xs text-muted-foreground">Fortnightly</p>
+                        <p className="text-xl font-bold text-foreground">
+                          ${fortnightlyFromCustom?.toLocaleString() ?? (perfData.length > 0 ? ((perfData[perfData.length - 1].weeklyRent ?? 0) * 2).toLocaleString() : "0")}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border border-border p-3">
+                        <p className="text-xs text-muted-foreground">Monthly</p>
+                        <p className="text-xl font-bold text-foreground">
+                          ${monthlyFromCustom?.toLocaleString() ?? (perfData.length > 0 ? Math.round((perfData[perfData.length - 1].weeklyRent ?? 0) * 52 / 12).toLocaleString() : "0")}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border border-border p-3">
+                        <p className="text-xs text-muted-foreground">Annual</p>
+                        <p className="text-xl font-bold text-foreground">
+                          ${annualFromCustom?.toLocaleString() ?? (perfData.length > 0 ? perfData[perfData.length - 1].annualRental?.toLocaleString() : "0")}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 {/* Summary cards */}
                 {perfData.length > 0 && (
@@ -324,17 +380,17 @@ const Financials = () => {
                     <Card>
                       <CardContent className="p-4">
                         <p className="text-sm text-muted-foreground">Current Weekly Rent</p>
-                        <p className="mt-1 text-2xl font-bold text-foreground">${perfData[perfData.length - 1].weeklyRent?.toLocaleString()}/wk</p>
+                        <p className="mt-1 text-2xl font-bold text-foreground">${(effectiveWeeklyRent ?? perfData[perfData.length - 1].weeklyRent)?.toLocaleString()}/wk</p>
                         <p className="text-xs text-muted-foreground mt-1">was ${perfData[0].weeklyRent?.toLocaleString()}/wk in {dateRange[0]}</p>
                       </CardContent>
                     </Card>
                     <Card>
                       <CardContent className="p-4">
                         <p className="text-sm text-muted-foreground">Annual Rental Income</p>
-                        <p className="mt-1 text-2xl font-bold text-foreground">${perfData[perfData.length - 1].annualRental?.toLocaleString()}</p>
+                        <p className="mt-1 text-2xl font-bold text-foreground">${(annualFromCustom ?? perfData[perfData.length - 1].annualRental)?.toLocaleString()}</p>
                         <div className="flex items-center gap-1 text-xs mt-1">
                           <ArrowUpRight className="h-3 w-3 text-emerald-400" />
-                          <span className="text-emerald-400">+{Math.round(((perfData[perfData.length - 1].annualRental - perfData[0].annualRental) / perfData[0].annualRental) * 100)}%</span>
+                          <span className="text-emerald-400">+{Math.round((((annualFromCustom ?? perfData[perfData.length - 1].annualRental) - perfData[0].annualRental) / perfData[0].annualRental) * 100)}%</span>
                           <span className="text-muted-foreground">since {dateRange[0]}</span>
                         </div>
                       </CardContent>
