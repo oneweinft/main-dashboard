@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Bell, Search, Bot, Send, X, Mic, Menu } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Bell, Search, Bot, Send, X, Mic, Calculator, DollarSign } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -64,11 +66,58 @@ function MiniOrb({ isListening }: { isListening: boolean }) {
   );
 }
 
+type RentPeriod = "daily" | "weekly" | "fortnightly" | "monthly" | "6monthly" | "yearly";
+
+const periodLabels: Record<RentPeriod, string> = {
+  daily: "Daily",
+  weekly: "Weekly",
+  fortnightly: "Fortnightly",
+  monthly: "Calendar monthly",
+  "6monthly": "6 monthly",
+  yearly: "Yearly",
+};
+
+const periodToWeekly: Record<RentPeriod, number> = {
+  daily: 7,
+  weekly: 1,
+  fortnightly: 1 / 2,
+  monthly: 12 / 52,
+  "6monthly": 2 / 52,
+  yearly: 1 / 52,
+};
+
+const weeklyToPeriod: Record<RentPeriod, number> = {
+  daily: 1 / 7,
+  weekly: 1,
+  fortnightly: 2,
+  monthly: 52 / 12,
+  "6monthly": 52 / 2,
+  yearly: 52,
+};
+
 export function DashboardHeader() {
   const [aiQuery, setAiQuery] = useState("");
   const [aiOpen, setAiOpen] = useState(false);
+  const [rentOpen, setRentOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [rentInputPeriod, setRentInputPeriod] = useState<RentPeriod>("weekly");
+  const [rentAmount, setRentAmount] = useState("550");
   const navigate = useNavigate();
+
+  const weeklyRent = useMemo(() => {
+    const val = parseFloat(rentAmount) || 0;
+    return val * periodToWeekly[rentInputPeriod];
+  }, [rentAmount, rentInputPeriod]);
+
+  const rentBreakdown = useMemo(() => {
+    const periods: RentPeriod[] = ["daily", "weekly", "fortnightly", "monthly", "6monthly", "yearly"];
+    return periods.map((p) => ({
+      period: p,
+      label: periodLabels[p],
+      amount: weeklyRent * weeklyToPeriod[p],
+      isInput: p === rentInputPeriod,
+    }));
+  }, [weeklyRent, rentInputPeriod]);
 
   const handleAiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,7 +137,16 @@ export function DashboardHeader() {
           variant="outline"
           size="sm"
           className="gap-1.5 sm:gap-2 text-primary border-primary/30 hover:bg-primary/10 h-8 px-2 sm:px-3"
-          onClick={() => setAiOpen((prev) => !prev)}
+          onClick={() => { setRentOpen((prev) => !prev); setAiOpen(false); }}
+        >
+          <Calculator className="h-4 w-4" />
+          <span className="hidden md:inline text-sm">Rent Calc</span>
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-1.5 sm:gap-2 text-primary border-primary/30 hover:bg-primary/10 h-8 px-2 sm:px-3"
+          onClick={() => { setAiOpen((prev) => !prev); setRentOpen(false); }}
         >
           <Bot className="h-4 w-4" />
           <span className="hidden md:inline text-sm">AI Assistant</span>
@@ -104,6 +162,69 @@ export function DashboardHeader() {
           JD
         </div>
       </div>
+
+      <AnimatePresence>
+        {rentOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="absolute right-2 sm:right-4 top-[calc(100%+8px)] z-50 w-[calc(100vw-1rem)] sm:w-96 max-w-md rounded-2xl border border-border bg-background p-5 sm:p-6 shadow-xl"
+          >
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 top-2 h-6 w-6 text-muted-foreground hover:text-foreground"
+              onClick={() => setRentOpen(false)}
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+
+            <h3 className="text-lg font-bold text-primary mb-4">Rent calculator</h3>
+
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-sm text-muted-foreground shrink-0">The</span>
+              <Select value={rentInputPeriod} onValueChange={(v) => setRentInputPeriod(v as RentPeriod)}>
+                <SelectTrigger className="w-44">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(periodLabels).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>{label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-sm text-muted-foreground shrink-0">rent is</span>
+              <div className="flex items-center gap-1 border border-border rounded-md px-2">
+                <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  type="number"
+                  value={rentAmount}
+                  onChange={(e) => setRentAmount(e.target.value)}
+                  className="border-0 p-0 h-9 w-20 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {rentBreakdown.map((row) => (
+                <div key={row.period} className="flex items-center justify-between py-1">
+                  <span className={`text-sm ${row.isInput ? "font-semibold text-foreground" : "text-muted-foreground"}`}>
+                    {row.label}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {row.isInput && <span className="h-2 w-2 rounded-full bg-primary" />}
+                    <span className={`text-sm tabular-nums ${row.isInput ? "font-semibold text-foreground" : "text-foreground"}`}>
+                      $ {row.amount.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {aiOpen && (
