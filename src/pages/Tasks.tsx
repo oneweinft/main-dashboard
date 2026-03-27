@@ -6,7 +6,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, X, GripVertical, Calendar, User } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Plus, X, GripVertical, Calendar, User, Bot, Send, Bell, CheckCircle } from "lucide-react";
+import { useData } from "@/context/DataContext";
+import { useNavigate } from "react-router-dom";
 
 type TaskStatus = "backlog" | "open" | "working" | "approval" | "done";
 
@@ -23,12 +41,15 @@ interface Task {
 }
 
 const columns: { key: TaskStatus; label: string; color: string }[] = [
-  { key: "backlog", label: "BACKLOG", color: "bg-gray-100 border-gray-300" },
-  { key: "open", label: "OPEN TASKS", color: "bg-amber-50 border-amber-300" },
-  { key: "working", label: "WORKING ON", color: "bg-blue-50 border-blue-300" },
-  { key: "approval", label: "WAITING FOR APPROVAL", color: "bg-orange-50 border-orange-300" },
-  { key: "done", label: "DONE", color: "bg-emerald-50 border-emerald-300" },
+  { key: "backlog", label: "BACKLOG", color: "bg-muted/50 border-border" },
+  { key: "open", label: "OPEN TASKS", color: "bg-amber-50/50 dark:bg-amber-950/20 border-amber-300 dark:border-amber-700" },
+  { key: "working", label: "WORKING ON", color: "bg-blue-50/50 dark:bg-blue-950/20 border-blue-300 dark:border-blue-700" },
+  { key: "approval", label: "WAITING FOR APPROVAL", color: "bg-orange-50/50 dark:bg-orange-950/20 border-orange-300 dark:border-orange-700" },
+  { key: "done", label: "DONE", color: "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-700" },
 ];
+
+const projects = ["Property Maintenance", "Compliance Audit", "Tenant Onboarding", "Inspections", "Documentation", "Onboarding", "Migration", "Reports", "Dashboard"];
+const assignees = ["Sarah M.", "John D.", "Mark T.", "Unassigned"];
 
 const initialTasks: Task[] = [
   { id: "T001", title: "New Backlog Item", project: "Property Maintenance", planStart: "Oct 24, 2026", planEnd: "Oct 24, 2026", actualStart: "Nov 3, 2026", actualEnd: "Nov 4, 2026", assignee: "Sarah M.", status: "backlog" },
@@ -49,32 +70,92 @@ const initialTasks: Task[] = [
   { id: "T016", title: "Write Compliance Specification", project: "Compliance Audit", planStart: "Sep 8, 2026", planEnd: "Oct 21, 2026", actualStart: "Aug 29, 2026", actualEnd: "Oct 18, 2026", assignee: "Sarah M.", status: "done" },
 ];
 
+const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [draggedTask, setDraggedTask] = useState<string | null>(null);
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [addToColumn, setAddToColumn] = useState<TaskStatus>("backlog");
+  const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
+  const { notifications, markNotificationSentToAI, addAILog } = useData();
+  const navigate = useNavigate();
 
-  const handleDragStart = (taskId: string) => {
-    setDraggedTask(taskId);
-  };
+  // New task form state
+  const [newTitle, setNewTitle] = useState("");
+  const [newProject, setNewProject] = useState(projects[0]);
+  const [newAssignee, setNewAssignee] = useState(assignees[0]);
+  const [newPlanStart, setNewPlanStart] = useState("");
+  const [newPlanEnd, setNewPlanEnd] = useState("");
 
+  const handleDragStart = (taskId: string) => setDraggedTask(taskId);
   const handleDrop = (status: TaskStatus) => {
     if (!draggedTask) return;
-    setTasks(prev =>
-      prev.map(t => t.id === draggedTask ? { ...t, status } : t)
-    );
+    setTasks(prev => prev.map(t => t.id === draggedTask ? { ...t, status } : t));
     setDraggedTask(null);
   };
+  const handleDragOver = (e: React.DragEvent) => e.preventDefault();
+  const removeTask = (taskId: string) => setTasks(prev => prev.filter(t => t.id !== taskId));
+  const getTasksByStatus = (status: TaskStatus) => tasks.filter(t => t.status === status);
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
+  const openAddDialog = (column: TaskStatus) => {
+    setAddToColumn(column);
+    setNewTitle("");
+    setNewProject(projects[0]);
+    setNewAssignee(assignees[0]);
+    setNewPlanStart("");
+    setNewPlanEnd("");
+    setAddDialogOpen(true);
   };
 
-  const removeTask = (taskId: string) => {
-    setTasks(prev => prev.filter(t => t.id !== taskId));
+  const handleAddTask = () => {
+    if (!newTitle.trim()) return;
+    const newTask: Task = {
+      id: `T${Date.now()}`,
+      title: newTitle.trim(),
+      project: newProject,
+      assignee: newAssignee,
+      planStart: newPlanStart || today,
+      planEnd: newPlanEnd || today,
+      actualStart: "",
+      actualEnd: "",
+      status: addToColumn,
+    };
+    setTasks(prev => [...prev, newTask]);
+    setAddDialogOpen(false);
   };
 
-  const getTasksByStatus = (status: TaskStatus) =>
-    tasks.filter(t => t.status === status);
+  const toggleNotification = (id: string) => {
+    setSelectedNotifications(prev =>
+      prev.includes(id) ? prev.filter(n => n !== id) : [...prev, id]
+    );
+  };
+
+  const sendSelectedToAI = () => {
+    if (selectedNotifications.length === 0) return;
+    const selected = notifications.filter(n => selectedNotifications.includes(n.id));
+    const digest = selected.map(n => `• [${n.type.toUpperCase()}] ${n.title}: ${n.description}`).join("\n");
+    addAILog({
+      timestamp: new Date().toISOString(),
+      query: `Daily digest – ${selected.length} notification(s) sent for AI processing`,
+      response: `Received ${selected.length} dashboard notifications for analysis:\n${digest}\n\nI'll monitor these items and provide updates as needed.`,
+      source: "assistant",
+    });
+    markNotificationSentToAI(selectedNotifications);
+    setSelectedNotifications([]);
+  };
+
+  const unsentNotifications = notifications.filter(n => !n.sentToAI);
+
+  const notificationTypeColors: Record<string, string> = {
+    maintenance: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+    compliance: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+    rent: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+    inspection: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    tenant: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+    task: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    general: "bg-muted text-muted-foreground",
+  };
 
   return (
     <SidebarProvider>
@@ -93,8 +174,93 @@ export default function Tasks() {
               </div>
             </div>
 
-            {/* Summary Stats */}
             <div className="max-w-[1600px] mx-auto px-8 py-6">
+              {/* AI Digest Panel */}
+              {unsentNotifications.length > 0 && (
+                <Card className="mb-6 border-primary/20">
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Bell className="h-4 w-4 text-primary" />
+                        <h3 className="font-semibold text-sm text-foreground">Dashboard Notifications</h3>
+                        <Badge variant="secondary" className="text-xs">{unsentNotifications.length} new</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-xs gap-1"
+                          onClick={() => {
+                            if (selectedNotifications.length === unsentNotifications.length) {
+                              setSelectedNotifications([]);
+                            } else {
+                              setSelectedNotifications(unsentNotifications.map(n => n.id));
+                            }
+                          }}
+                        >
+                          {selectedNotifications.length === unsentNotifications.length ? "Deselect All" : "Select All"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="text-xs gap-1 bg-primary hover:bg-primary/90"
+                          disabled={selectedNotifications.length === 0}
+                          onClick={sendSelectedToAI}
+                        >
+                          <Bot className="h-3.5 w-3.5" />
+                          Send to AI ({selectedNotifications.length})
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                      {unsentNotifications.map(n => (
+                        <button
+                          key={n.id}
+                          onClick={() => toggleNotification(n.id)}
+                          className={`flex items-start gap-2 p-2.5 rounded-lg border text-left transition-all ${
+                            selectedNotifications.includes(n.id)
+                              ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                              : "border-border hover:border-muted-foreground/30"
+                          }`}
+                        >
+                          <div className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                            selectedNotifications.includes(n.id)
+                              ? "bg-primary border-primary"
+                              : "border-muted-foreground/40"
+                          }`}>
+                            {selectedNotifications.includes(n.id) && (
+                              <CheckCircle className="h-3 w-3 text-primary-foreground" />
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              <Badge className={`text-[10px] px-1.5 py-0 ${notificationTypeColors[n.type] || notificationTypeColors.general}`}>
+                                {n.type}
+                              </Badge>
+                            </div>
+                            <p className="text-xs font-medium text-foreground truncate">{n.title}</p>
+                            <p className="text-[10px] text-muted-foreground truncate">{n.description}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                    {notifications.some(n => n.sentToAI) && (
+                      <div className="mt-3 pt-3 border-t border-border">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs text-muted-foreground hover:text-foreground gap-1"
+                          onClick={() => navigate("/ai-assistant")}
+                        >
+                          <Bot className="h-3.5 w-3.5" />
+                          View AI Digest in Assistant →
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Summary Stats */}
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 {columns.map(col => (
                   <div key={col.key} className={`rounded-lg border p-4 ${col.color}`}>
@@ -125,8 +291,10 @@ export default function Tasks() {
                     </div>
 
                     <div className="p-2 space-y-2 flex-1">
-                      {/* Add task placeholder */}
-                      <button className="w-full text-left text-xs text-muted-foreground hover:text-emerald-600 px-2 py-1.5 rounded hover:bg-white/60 transition-colors flex items-center gap-1">
+                      <button
+                        onClick={() => openAddDialog(col.key)}
+                        className="w-full text-left text-xs text-muted-foreground hover:text-primary px-2 py-1.5 rounded hover:bg-background/60 transition-colors flex items-center gap-1"
+                      >
                         <Plus className="h-3 w-3" /> Add task
                       </button>
 
@@ -135,7 +303,7 @@ export default function Tasks() {
                           key={task.id}
                           draggable
                           onDragStart={() => handleDragStart(task.id)}
-                          className="cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow border bg-white group"
+                          className="cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow border bg-card group"
                         >
                           <CardContent className="p-3 space-y-2">
                             <div className="flex items-start justify-between gap-1">
@@ -145,12 +313,12 @@ export default function Tasks() {
                               </div>
                               <button
                                 onClick={() => removeTask(task.id)}
-                                className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-red-500 shrink-0"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive shrink-0"
                               >
                                 <X className="h-3.5 w-3.5" />
                               </button>
                             </div>
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-emerald-200 text-emerald-700 bg-emerald-50">
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-primary/30 text-primary bg-primary/5">
                               {task.project}
                             </Badge>
                             <div className="text-[10px] text-muted-foreground space-y-0.5">
@@ -158,10 +326,12 @@ export default function Tasks() {
                                 <Calendar className="h-2.5 w-2.5" />
                                 <span>Plan: {task.planStart} to {task.planEnd}</span>
                               </div>
-                              <div className="flex items-center gap-1">
-                                <Calendar className="h-2.5 w-2.5" />
-                                <span>Actual: {task.actualStart} to {task.actualEnd}</span>
-                              </div>
+                              {task.actualStart && (
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="h-2.5 w-2.5" />
+                                  <span>Actual: {task.actualStart} to {task.actualEnd}</span>
+                                </div>
+                              )}
                             </div>
                             <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
                               <User className="h-2.5 w-2.5" />
@@ -178,6 +348,72 @@ export default function Tasks() {
           </main>
         </div>
       </div>
+
+      {/* Add Task Dialog */}
+      <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add Task to {columns.find(c => c.key === addToColumn)?.label}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="task-title" className="text-sm">Task Title</Label>
+              <Input
+                id="task-title"
+                placeholder="Enter task title..."
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-sm">Project</Label>
+                <Select value={newProject} onValueChange={setNewProject}>
+                  <SelectTrigger className="text-sm"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {projects.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Assignee</Label>
+                <Select value={newAssignee} onValueChange={setNewAssignee}>
+                  <SelectTrigger className="text-sm"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {assignees.map(a => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-sm">Plan Start</Label>
+                <Input type="date" value={newPlanStart} onChange={(e) => setNewPlanStart(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-sm">Plan End</Label>
+                <Input type="date" value={newPlanEnd} onChange={(e) => setNewPlanEnd(e.target.value)} />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm">Column</Label>
+              <Select value={addToColumn} onValueChange={(v) => setAddToColumn(v as TaskStatus)}>
+                <SelectTrigger className="text-sm"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  {columns.map(c => <SelectItem key={c.key} value={c.key}>{c.label}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setAddDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleAddTask} disabled={!newTitle.trim()} className="bg-primary hover:bg-primary/90">
+              <Plus className="h-4 w-4 mr-1" /> Add Task
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </SidebarProvider>
   );
 }
