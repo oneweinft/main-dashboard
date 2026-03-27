@@ -25,6 +25,7 @@ import SOC2Checklist from "./pages/SOC2Checklist.tsx";
 import Settings from "./pages/Settings.tsx";
 import Properties from "./pages/Properties.tsx";
 import Financials from "./pages/Financials.tsx";
+import Tenancies from "./pages/Tenancies.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/settings" element={<Settings />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/financials" element={<Financials />} />
+          <Route path="/tenancies" element={<Tenancies />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

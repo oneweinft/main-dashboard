@@ -43,7 +43,7 @@ const mainItems = [
   { title: "Integrations", icon: Link2, url: "/integrations" },
   { title: "Documents", icon: FileText, url: "/documents" },
   { title: "Properties", icon: Building2, url: "/properties" },
-  { title: "Tenancies", icon: Key },
+  { title: "Tenancies", icon: Key, url: "/tenancies" },
   { title: "Financials", icon: DollarSign, url: "/financials" },
   { title: "Maintenance", icon: Wrench, url: "/maintenance" },
   { title: "Onboarding", icon: UserPlus, url: "/onboarding" },
