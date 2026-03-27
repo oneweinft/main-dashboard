@@ -453,6 +453,7 @@ const Financials = () => {
                   </CardContent>
                 </Card>
               </TabsContent>
+            </Tabs>
           </main>
         </div>
       </div>
