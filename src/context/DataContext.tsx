@@ -49,11 +49,22 @@ export interface AILog {
   source: "assistant" | "header-widget";
 }
 
+export interface DashboardNotification {
+  id: string;
+  timestamp: string;
+  type: "maintenance" | "compliance" | "rent" | "inspection" | "tenant" | "task" | "general";
+  title: string;
+  description: string;
+  read: boolean;
+  sentToAI: boolean;
+}
+
 interface DataContextType {
   properties: Property[];
   transactions: Transaction[];
   contacts: Contact[];
   aiLogs: AILog[];
+  notifications: DashboardNotification[];
   addProperty: (p: Omit<Property, "id">) => void;
   addProperties: (ps: Omit<Property, "id">[]) => void;
   addTransaction: (t: Omit<Transaction, "id">) => void;
@@ -61,6 +72,9 @@ interface DataContextType {
   addContact: (c: Omit<Contact, "id">) => void;
   addContacts: (cs: Omit<Contact, "id">[]) => void;
   addAILog: (log: Omit<AILog, "id">) => void;
+  addNotification: (n: Omit<DashboardNotification, "id" | "read" | "sentToAI">) => void;
+  markNotificationRead: (id: string) => void;
+  markNotificationSentToAI: (ids: string[]) => void;
 }
 
 const defaultProperties: Property[] = [
