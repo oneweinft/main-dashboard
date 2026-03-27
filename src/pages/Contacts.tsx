@@ -200,13 +200,20 @@ const Contacts = () => {
 
               {/* Tabs */}
               <Tabs defaultValue="renters" className="space-y-4">
-                <TabsList className="bg-muted/50 p-1">
+                <TabsList className="bg-muted/50 p-1 flex-wrap">
                   {tabConfig.map((tab) => (
                     <TabsTrigger key={tab.value} value={tab.value} className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                       <tab.icon className="h-4 w-4" />
                       {tab.label}
                     </TabsTrigger>
                   ))}
+                  <TabsTrigger value="comms-log" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                    <Bot className="h-4 w-4" />
+                    AI Comms Log
+                    {aiLogs.length > 0 && (
+                      <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-xs bg-primary/15 text-primary">{aiLogs.length}</Badge>
+                    )}
+                  </TabsTrigger>
                 </TabsList>
 
                 {tabConfig.map((tab) => (
@@ -222,6 +229,44 @@ const Contacts = () => {
                     </div>
                   </TabsContent>
                 ))}
+
+                <TabsContent value="comms-log">
+                  <div className="bg-card rounded-xl border border-border p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-lg font-semibold text-foreground">AI Communication Logs</h2>
+                      <span className="text-sm text-muted-foreground">{aiLogs.length} interactions</span>
+                    </div>
+                    {aiLogs.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <MessageSquare className="h-10 w-10 text-muted-foreground/40 mb-3" />
+                        <p className="text-muted-foreground text-sm">No AI interactions logged yet.</p>
+                        <p className="text-muted-foreground/60 text-xs mt-1">Conversations from the AI Assistant will appear here.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 max-h-[500px] overflow-auto">
+                        {aiLogs.map((log) => (
+                          <div key={log.id} className="rounded-lg border border-border p-4 space-y-2 hover:bg-muted/30 transition-colors">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Bot className="h-4 w-4 text-primary" />
+                                <Badge variant="outline" className="text-xs border-primary/20 text-primary">
+                                  {log.source === "assistant" ? "AI Assistant" : "Header Widget"}
+                                </Badge>
+                              </div>
+                              <span className="text-xs text-muted-foreground">
+                                {new Date(log.timestamp).toLocaleString()}
+                              </span>
+                            </div>
+                            <div className="pl-6 space-y-1.5">
+                              <p className="text-sm text-foreground"><span className="font-medium text-primary/80">Q:</span> {log.query}</p>
+                              <p className="text-sm text-muted-foreground"><span className="font-medium">A:</span> {log.response}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
               </Tabs>
             </div>
           </main>
