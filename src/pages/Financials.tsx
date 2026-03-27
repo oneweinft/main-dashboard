@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardHeader } from "@/components/DashboardHeader";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -19,14 +20,37 @@ import {
 } from "@/components/ui/dialog";
 import {
   DollarSign, TrendingUp, TrendingDown, Download, Upload, FileSpreadsheet,
-  ArrowUpRight, ArrowDownRight, PieChart, FileText, Search, Plus, BarChart3,
+  ArrowUpRight, ArrowDownRight, PieChart, FileText, Search, Plus, BarChart3, Building2, CalendarRange,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid,
+  LineChart, Line, Area, AreaChart, Legend,
 } from "recharts";
 import { useData, type Transaction } from "@/context/DataContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+
+// Generate simulated property performance data for a given property
+function generatePropertyPerformance(propertyAddress: string, startYear: number, endYear: number) {
+  const seed = propertyAddress.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const baseRent = 400 + (seed % 800);
+  const baseValue = 300000 + (seed % 500000);
+  const data = [];
+  for (let y = startYear; y <= endYear; y++) {
+    const yearIdx = y - 2000;
+    const rentGrowth = 1 + (0.025 + (seed % 3) * 0.005) * yearIdx + Math.sin(yearIdx * 0.5) * 0.02;
+    const capitalGrowth = 1 + (0.04 + (seed % 5) * 0.003) * yearIdx + Math.sin(yearIdx * 0.3) * 0.03;
+    data.push({
+      year: y.toString(),
+      weeklyRent: Math.round(baseRent * rentGrowth),
+      annualRental: Math.round(baseRent * rentGrowth * 52),
+      propertyValue: Math.round(baseValue * capitalGrowth),
+      capitalGain: Math.round(baseValue * capitalGrowth - baseValue),
+      yieldPct: parseFloat(((baseRent * rentGrowth * 52) / (baseValue * capitalGrowth) * 100).toFixed(1)),
+    });
+  }
+  return data;
+}
 
 const revenueData = [
   { month: "Jul", income: 82400, expenses: 31200 },
@@ -61,6 +85,8 @@ const statusColor: Record<Transaction["status"], string> = {
   failed: "bg-red-500/15 text-red-400 border-red-500/30",
 };
 
+const currentYear = new Date().getFullYear();
+
 const Financials = () => {
   const { transactions, addTransaction, properties } = useData();
   const { toast } = useToast();
@@ -70,6 +96,36 @@ const Financials = () => {
   const [txFilter, setTxFilter] = useState("all");
   const [addOpen, setAddOpen] = useState(false);
   const [form, setForm] = useState({ date: new Date().toISOString().slice(0, 10), description: "", property: "", category: "Rent", type: "income" as "income" | "expense", amount: "", status: "completed" as Transaction["status"] });
+
+  // Property performance state
+  const [selectedProperty, setSelectedProperty] = useState<string>("all");
+  const [dateRange, setDateRange] = useState<[number, number]>([2010, currentYear]);
+
+  const perfData = useMemo(() => {
+    if (selectedProperty === "all") {
+      // Aggregate across all properties
+      const allData: Record<string, { annualRental: number; propertyValue: number; capitalGain: number; count: number }> = {};
+      properties.forEach((p) => {
+        const pData = generatePropertyPerformance(p.address, dateRange[0], dateRange[1]);
+        pData.forEach((d) => {
+          if (!allData[d.year]) allData[d.year] = { annualRental: 0, propertyValue: 0, capitalGain: 0, count: 0 };
+          allData[d.year].annualRental += d.annualRental;
+          allData[d.year].propertyValue += d.propertyValue;
+          allData[d.year].capitalGain += d.capitalGain;
+          allData[d.year].count += 1;
+        });
+      });
+      return Object.entries(allData).map(([year, d]) => ({
+        year,
+        annualRental: d.annualRental,
+        propertyValue: Math.round(d.propertyValue / d.count),
+        capitalGain: d.capitalGain,
+        weeklyRent: Math.round(d.annualRental / 52),
+        yieldPct: parseFloat((d.annualRental / d.propertyValue * 100).toFixed(1)),
+      }));
+    }
+    return generatePropertyPerformance(selectedProperty, dateRange[0], dateRange[1]);
+  }, [selectedProperty, dateRange, properties]);
 
   const totalIncome = transactions.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0);
   const totalExpenses = transactions.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0);
@@ -161,6 +217,7 @@ const Financials = () => {
             <Tabs value={tab} onValueChange={setTab}>
               <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
+                <TabsTrigger value="performance">Property Performance</TabsTrigger>
                 <TabsTrigger value="transactions">Transactions ({transactions.length})</TabsTrigger>
                 <TabsTrigger value="export">Export</TabsTrigger>
               </TabsList>
@@ -202,6 +259,129 @@ const Financials = () => {
                           <Bar dataKey="income" name="Income" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                           <Bar dataKey="expenses" name="Expenses" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
                         </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Property Performance Tab */}
+              <TabsContent value="performance" className="space-y-6 mt-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+                  <div className="flex-1 max-w-xs">
+                    <Label className="text-sm font-medium text-foreground mb-1.5 block">
+                      <Building2 className="inline h-4 w-4 mr-1 text-primary" />
+                      Select Property
+                    </Label>
+                    <Select value={selectedProperty} onValueChange={setSelectedProperty}>
+                      <SelectTrigger><SelectValue placeholder="All Properties" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Properties (Portfolio)</SelectItem>
+                        {properties.map((p) => (
+                          <SelectItem key={p.id} value={p.address}>{p.address}, {p.suburb}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex-1 max-w-md">
+                    <Label className="text-sm font-medium text-foreground mb-1.5 block">
+                      <CalendarRange className="inline h-4 w-4 mr-1 text-primary" />
+                      Date Range: {dateRange[0]} – {dateRange[1]}
+                    </Label>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-muted-foreground">2000</span>
+                      <Slider
+                        min={2000}
+                        max={currentYear}
+                        step={1}
+                        value={dateRange}
+                        onValueChange={(v) => setDateRange(v as [number, number])}
+                        className="flex-1"
+                      />
+                      <span className="text-xs text-muted-foreground">{currentYear}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Summary cards */}
+                {perfData.length > 0 && (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <Card>
+                      <CardContent className="p-4">
+                        <p className="text-sm text-muted-foreground">Current Weekly Rent</p>
+                        <p className="mt-1 text-2xl font-bold text-foreground">${perfData[perfData.length - 1].weeklyRent?.toLocaleString()}/wk</p>
+                        <p className="text-xs text-muted-foreground mt-1">was ${perfData[0].weeklyRent?.toLocaleString()}/wk in {dateRange[0]}</p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <p className="text-sm text-muted-foreground">Annual Rental Income</p>
+                        <p className="mt-1 text-2xl font-bold text-foreground">${perfData[perfData.length - 1].annualRental?.toLocaleString()}</p>
+                        <div className="flex items-center gap-1 text-xs mt-1">
+                          <ArrowUpRight className="h-3 w-3 text-emerald-400" />
+                          <span className="text-emerald-400">+{Math.round(((perfData[perfData.length - 1].annualRental - perfData[0].annualRental) / perfData[0].annualRental) * 100)}%</span>
+                          <span className="text-muted-foreground">since {dateRange[0]}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <p className="text-sm text-muted-foreground">Est. Property Value</p>
+                        <p className="mt-1 text-2xl font-bold text-foreground">${perfData[perfData.length - 1].propertyValue?.toLocaleString()}</p>
+                        <div className="flex items-center gap-1 text-xs mt-1">
+                          <ArrowUpRight className="h-3 w-3 text-emerald-400" />
+                          <span className="text-emerald-400">+{Math.round(((perfData[perfData.length - 1].propertyValue - perfData[0].propertyValue) / perfData[0].propertyValue) * 100)}%</span>
+                          <span className="text-muted-foreground">capital growth</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardContent className="p-4">
+                        <p className="text-sm text-muted-foreground">Total Capital Gain</p>
+                        <p className="mt-1 text-2xl font-bold text-emerald-400">${perfData[perfData.length - 1].capitalGain?.toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground mt-1">Yield: {perfData[perfData.length - 1].yieldPct}%</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {/* Rental Income Trend */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base font-bold text-primary">Rental Income Trend</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[280px] w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={perfData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                          <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+                          <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))", fontSize: 12 }} formatter={(v: number) => [`$${v.toLocaleString()}`, undefined]} />
+                          <Area type="monotone" dataKey="annualRental" name="Annual Rental" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.15} strokeWidth={2} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Capital Gain Trend */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base font-bold text-primary">Capital Gain & Property Value</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-[280px] w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={perfData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} />
+                          <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+                          <Tooltip contentStyle={{ borderRadius: 8, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--foreground))", fontSize: 12 }} formatter={(v: number) => [`$${v.toLocaleString()}`, undefined]} />
+                          <Legend />
+                          <Line type="monotone" dataKey="propertyValue" name="Property Value" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+                          <Line type="monotone" dataKey="capitalGain" name="Capital Gain" stroke="hsl(142 71% 45%)" strokeWidth={2} dot={false} />
+                        </LineChart>
                       </ResponsiveContainer>
                     </div>
                   </CardContent>
