@@ -122,6 +122,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>(defaultTransactions);
   const [contacts, setContacts] = useState<Contact[]>(defaultContacts);
   const [aiLogs, setAILogs] = useState<AILog[]>([]);
+  const [notifications, setNotifications] = useState<DashboardNotification[]>([
+    { id: "n1", timestamp: new Date(Date.now() - 3600000).toISOString(), type: "rent", title: "Rent payment received", description: "Sarah Mitchell paid $950 for 24 Casterly Rock Dr", read: false, sentToAI: false },
+    { id: "n2", timestamp: new Date(Date.now() - 7200000).toISOString(), type: "maintenance", title: "Maintenance request submitted", description: "Plumbing issue reported at 9 Ocean Pde – Unit 2", read: false, sentToAI: false },
+    { id: "n3", timestamp: new Date(Date.now() - 14400000).toISOString(), type: "compliance", title: "Compliance certificate expiring", description: "Smoke alarm certificate for 15 High St expires in 7 days", read: false, sentToAI: false },
+    { id: "n4", timestamp: new Date(Date.now() - 21600000).toISOString(), type: "inspection", title: "Inspection scheduled", description: "Routine inspection for 56 Elm Cres on Apr 5, 2026", read: true, sentToAI: false },
+    { id: "n5", timestamp: new Date(Date.now() - 43200000).toISOString(), type: "tenant", title: "Lease renewal due", description: "James Cooper's lease at 15 High St expires in 30 days", read: false, sentToAI: false },
+    { id: "n6", timestamp: new Date(Date.now() - 86400000).toISOString(), type: "rent", title: "Rent arrears alert", description: "Liam O'Brien – 33 King William St is 5 days overdue ($550)", read: false, sentToAI: false },
+  ]);
 
   const addProperty = useCallback((p: Omit<Property, "id">) => {
     setProperties((prev) => [...prev, { ...p, id: genId("p") }]);
@@ -144,9 +152,18 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const addAILog = useCallback((log: Omit<AILog, "id">) => {
     setAILogs((prev) => [{ ...log, id: genId("ai") }, ...prev]);
   }, []);
+  const addNotification = useCallback((n: Omit<DashboardNotification, "id" | "read" | "sentToAI">) => {
+    setNotifications((prev) => [{ ...n, id: genId("n"), read: false, sentToAI: false }, ...prev]);
+  }, []);
+  const markNotificationRead = useCallback((id: string) => {
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  }, []);
+  const markNotificationSentToAI = useCallback((ids: string[]) => {
+    setNotifications((prev) => prev.map((n) => (ids.includes(n.id) ? { ...n, sentToAI: true } : n)));
+  }, []);
 
   return (
-    <DataContext.Provider value={{ properties, transactions, contacts, aiLogs, addProperty, addProperties, addTransaction, addTransactions, addContact, addContacts, addAILog }}>
+    <DataContext.Provider value={{ properties, transactions, contacts, aiLogs, notifications, addProperty, addProperties, addTransaction, addTransactions, addContact, addContacts, addAILog, addNotification, markNotificationRead, markNotificationSentToAI }}>
       {children}
     </DataContext.Provider>
   );
