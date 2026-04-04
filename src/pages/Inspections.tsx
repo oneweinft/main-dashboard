@@ -316,7 +316,7 @@ const Inspections = () => {
             </div>
 
             <Tabs value={tab} onValueChange={setTab}>
-              <TabsList className="flex-wrap">
+              <TabsList className="w-full overflow-x-auto flex-nowrap justify-start">
                 <TabsTrigger value="schedule">Schedule</TabsTrigger>
                 <TabsTrigger value="condition">Condition</TabsTrigger>
                 <TabsTrigger value="photos">Photos ({photoGallery.length})</TabsTrigger>
