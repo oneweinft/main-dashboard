@@ -634,12 +634,12 @@ const Inspections = () => {
                 {/* Recent Reports */}
                 <div className="mt-6">
                   <p className="text-sm font-medium text-muted-foreground mb-3">Recent Reports</p>
-                  <div className="border border-border rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
+                   <div className="border border-border rounded-lg overflow-x-auto">
+                    <table className="w-full text-sm min-w-[600px]">
                       <thead>
                         <tr className="bg-secondary/50">
                           {["Property", "Type", "Date", "PM", "Status", "Actions"].map(h => (
-                            <th key={h} className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase">{h}</th>
+                            <th key={h} className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase whitespace-nowrap">{h}</th>
                           ))}
                         </tr>
                       </thead>
