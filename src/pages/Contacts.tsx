@@ -255,7 +255,7 @@ const Contacts = () => {
 
               {/* Tabs */}
               <Tabs defaultValue="renters" className="space-y-4">
-                <TabsList className="bg-muted/50 p-1 flex-wrap">
+                <TabsList className="bg-muted/50 p-1 w-full overflow-x-auto flex-nowrap justify-start">
                   {tabConfig.map((tab) => (
                     <TabsTrigger key={tab.value} value={tab.value} className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                       <tab.icon className="h-4 w-4" />
