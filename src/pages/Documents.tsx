@@ -41,14 +41,14 @@ const Documents = () => {
           <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
             <div className="bg-card rounded-xl border border-border p-6 space-y-6">
               {/* Header */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h1 className="text-xl sm:text-2xl font-bold text-foreground">Documents</h1>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 cursor-pointer">
                     Category
                   </Badge>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
