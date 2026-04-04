@@ -146,12 +146,12 @@ const Compliance = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
-          <main className="flex-1 overflow-auto p-6">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-primary italic">Compliance</h1>
+          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <h1 className="text-xl sm:text-2xl font-bold text-primary italic">Compliance</h1>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" className="gap-1.5"><Download className="h-4 w-4" /> Export</Button>
                   <Button onClick={() => navigate("/soc2-checklist")} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
