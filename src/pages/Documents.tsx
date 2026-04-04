@@ -87,15 +87,15 @@ const Documents = () => {
                 <Badge variant="secondary" className="cursor-pointer">Keyword</Badge>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 p-4 bg-secondary/50 rounded-lg border border-border">
-                <div className="flex items-center gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 bg-secondary/50 rounded-lg border border-border">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Property</span>
-                  <Input placeholder="Search Properties..." className="w-[160px]" />
+                  <Input placeholder="Search Properties..." className="w-full" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Landlord (s)</span>
                   <Select>
-                    <SelectTrigger className="w-[160px]">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Landlords" />
                     </SelectTrigger>
                     <SelectContent>
@@ -103,10 +103,10 @@ const Documents = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Creditor/Tradie</span>
                   <Select>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Creditor/Tradie..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -114,10 +114,10 @@ const Documents = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Tenant (s)</span>
                   <Select>
-                    <SelectTrigger className="w-[140px]">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Tenants..." />
                     </SelectTrigger>
                     <SelectContent>
