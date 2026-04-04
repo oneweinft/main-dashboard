@@ -316,7 +316,7 @@ const Inspections = () => {
             </div>
 
             <Tabs value={tab} onValueChange={setTab}>
-              <TabsList className="flex-wrap">
+              <TabsList className="w-full overflow-x-auto flex-nowrap justify-start">
                 <TabsTrigger value="schedule">Schedule</TabsTrigger>
                 <TabsTrigger value="condition">Condition</TabsTrigger>
                 <TabsTrigger value="photos">Photos ({photoGallery.length})</TabsTrigger>
@@ -439,7 +439,7 @@ const Inspections = () => {
                 <div className="flex items-center justify-between gap-3 flex-wrap">
                   <div className="flex items-center gap-3">
                     <Select value={conditionProperty} onValueChange={setConditionProperty}>
-                      <SelectTrigger className="w-60 h-9 text-sm"><SelectValue /></SelectTrigger>
+                      <SelectTrigger className="w-full sm:w-60 h-9 text-sm"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="56 Elm Cres, VIC">56 Elm Cres, VIC</SelectItem>
                         <SelectItem value="24 Casterly Rock, NSW">24 Casterly Rock, NSW</SelectItem>
@@ -474,13 +474,13 @@ const Inspections = () => {
                       <CardTitle className="text-sm font-semibold text-foreground">{room.room}</CardTitle>
                     </CardHeader>
                     <CardContent className="px-4 pb-4">
-                      <div className="border border-border rounded-lg overflow-hidden">
-                        <table className="w-full text-sm">
+                      <div className="border border-border rounded-lg overflow-x-auto">
+                        <table className="w-full text-sm min-w-[480px]">
                           <thead>
                             <tr className="bg-secondary/50">
                               <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase">Item</th>
                               <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase w-28">Condition</th>
-                              <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase">Notes</th>
+                              <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase hidden sm:table-cell">Notes</th>
                               <th className="p-2.5 text-center text-xs font-semibold text-muted-foreground uppercase w-16">Photo</th>
                             </tr>
                           </thead>
@@ -489,7 +489,7 @@ const Inspections = () => {
                               <tr key={ii} className="border-t border-border hover:bg-secondary/30 transition-colors">
                                 <td className="p-2.5 text-foreground text-xs font-medium">{item.name}</td>
                                 <td className="p-2.5"><ConditionBadge condition={item.condition} /></td>
-                                <td className="p-2.5 text-xs text-muted-foreground">{item.notes || "—"}</td>
+                                <td className="p-2.5 text-xs text-muted-foreground hidden sm:table-cell">{item.notes || "—"}</td>
                                 <td className="p-2.5 text-center">
                                   <Button variant="ghost" size="icon" className="h-7 w-7">
                                     <Camera className="h-3.5 w-3.5 text-muted-foreground" />
@@ -634,12 +634,12 @@ const Inspections = () => {
                 {/* Recent Reports */}
                 <div className="mt-6">
                   <p className="text-sm font-medium text-muted-foreground mb-3">Recent Reports</p>
-                  <div className="border border-border rounded-lg overflow-hidden">
-                    <table className="w-full text-sm">
+                   <div className="border border-border rounded-lg overflow-x-auto">
+                    <table className="w-full text-sm min-w-[600px]">
                       <thead>
                         <tr className="bg-secondary/50">
                           {["Property", "Type", "Date", "PM", "Status", "Actions"].map(h => (
-                            <th key={h} className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase">{h}</th>
+                            <th key={h} className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase whitespace-nowrap">{h}</th>
                           ))}
                         </tr>
                       </thead>
