@@ -96,14 +96,14 @@ export default function Onboarding() {
           <DashboardHeader />
           <main className="flex-1 overflow-auto">
             {/* Hero */}
-            <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-8 py-10 text-white">
+            <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 sm:px-8 py-6 sm:py-10 text-white">
               <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold mb-2">Onboarding Centre</h1>
-                <p className="text-emerald-100 text-lg">Manage renter, rental provider, and service provider onboarding in one place.</p>
+                <h1 className="text-xl sm:text-3xl font-bold mb-2">Onboarding Centre</h1>
+                <p className="text-emerald-100 text-sm sm:text-lg">Manage renter, rental provider, and service provider onboarding in one place.</p>
               </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-8 py-8 space-y-8">
+            <div className="max-w-6xl mx-auto px-3 sm:px-8 py-4 sm:py-8 space-y-6 sm:space-y-8">
               {/* Timeline */}
               <Card className="border-emerald-200">
                 <CardHeader className="pb-2">

@@ -41,14 +41,14 @@ const Documents = () => {
           <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
             <div className="bg-card rounded-xl border border-border p-6 space-y-6">
               {/* Header */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <h1 className="text-xl sm:text-2xl font-bold text-foreground">Documents</h1>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 cursor-pointer">
                     Category
                   </Badge>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full sm:w-[180px]">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -87,15 +87,15 @@ const Documents = () => {
                 <Badge variant="secondary" className="cursor-pointer">Keyword</Badge>
               </div>
 
-              <div className="flex flex-wrap items-center gap-3 p-4 bg-secondary/50 rounded-lg border border-border">
-                <div className="flex items-center gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 bg-secondary/50 rounded-lg border border-border">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Property</span>
-                  <Input placeholder="Search Properties..." className="w-[160px]" />
+                  <Input placeholder="Search Properties..." className="w-full" />
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Landlord (s)</span>
                   <Select>
-                    <SelectTrigger className="w-[160px]">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Landlords" />
                     </SelectTrigger>
                     <SelectContent>
@@ -103,10 +103,10 @@ const Documents = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Creditor/Tradie</span>
                   <Select>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Creditor/Tradie..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -114,10 +114,10 @@ const Documents = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="space-y-1">
                   <span className="text-sm font-medium text-muted-foreground">Tenant (s)</span>
                   <Select>
-                    <SelectTrigger className="w-[140px]">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Tenants..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -148,8 +148,8 @@ const Documents = () => {
               {activeTab === "forms" ? (
                 <FormsNotices />
               ) : (
-                <div className="border border-border rounded-lg overflow-hidden">
-                  <table className="w-full">
+                <div className="border border-border rounded-lg overflow-x-auto">
+                  <table className="w-full min-w-[600px]">
                     <thead>
                       <tr className="bg-secondary/50">
                         <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider w-10">

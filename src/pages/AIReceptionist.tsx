@@ -19,6 +19,7 @@ import {
   Bell,
   ExternalLink,
   Zap,
+  ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -178,6 +179,7 @@ export default function AIReceptionist() {
   const [selectedContact, setSelectedContact] = useState(contacts[3]);
   const [activeTab, setActiveTab] = useState<ChannelType | "all">("call");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showDetail, setShowDetail] = useState(false);
   const [details, setDetails] = useState<ConversationDetail[]>([
     {
       id: "1",
@@ -225,30 +227,35 @@ export default function AIReceptionist() {
     c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleSelectContact = (contact: Contact) => {
+    setSelectedContact(contact);
+    setShowDetail(true);
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
         <DashboardSidebar />
         <main className="flex flex-1 flex-col overflow-hidden">
           {/* Top bar */}
-          <header className="flex h-14 items-center justify-between border-b border-border px-4">
-            <h1 className="text-lg font-bold text-foreground">AI Voice Receptionist</h1>
-            <div className="flex items-center gap-2">
+          <header className="flex h-14 items-center justify-between border-b border-border px-3 sm:px-4">
+            <h1 className="text-base sm:text-lg font-bold text-foreground truncate">AI Voice Receptionist</h1>
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <a
                 href="https://vapi.ai"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 border border-primary/20 px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-semibold text-primary hover:bg-primary/20 transition-colors"
               >
-                <Zap className="h-3.5 w-3.5" />
-                Powered by Vapi
+                <Zap className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                <span className="hidden sm:inline">Powered by</span> Vapi
                 <ExternalLink className="h-3 w-3" />
               </a>
-              <Button variant="ghost" size="icon" className="relative text-muted-foreground">
+              <Button variant="ghost" size="icon" className="relative text-muted-foreground h-8 w-8">
                 <Bell className="h-4 w-4" />
                 <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive" />
               </Button>
-              <div className="ml-2 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
+              <div className="ml-1 flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
                 JD
               </div>
             </div>
@@ -256,13 +263,13 @@ export default function AIReceptionist() {
 
           <div className="flex flex-1 overflow-hidden">
             {/* Left panel — Inbox */}
-            <div className="flex w-full max-w-md flex-col border-r border-border">
-              <div className="flex items-center justify-between px-4 pt-4 pb-2">
-                <h2 className="text-xl font-bold text-foreground">Inbox</h2>
+            <div className={`flex w-full md:w-full md:max-w-md flex-col border-r border-border ${showDetail ? "hidden md:flex" : "flex"}`}>
+              <div className="flex items-center justify-between px-3 sm:px-4 pt-3 sm:pt-4 pb-2">
+                <h2 className="text-lg sm:text-xl font-bold text-foreground">Inbox</h2>
               </div>
 
               {/* Search + Filter */}
-              <div className="flex gap-2 px-4 pb-2">
+              <div className="flex gap-2 px-3 sm:px-4 pb-2">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -278,7 +285,7 @@ export default function AIReceptionist() {
               </div>
 
               {/* Dropdowns row */}
-              <div className="flex gap-2 px-4 pb-3">
+              <div className="flex gap-2 px-3 sm:px-4 pb-3">
                 <Button variant="outline" size="sm" className="gap-1 text-xs">
                   All messages <ChevronDown className="h-3 w-3" />
                 </Button>
@@ -294,24 +301,24 @@ export default function AIReceptionist() {
                 {filteredContacts.map((contact) => (
                   <button
                     key={contact.id}
-                    onClick={() => setSelectedContact(contact)}
-                    className={`w-full border-b border-border px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
+                    onClick={() => handleSelectContact(contact)}
+                    className={`w-full border-b border-border px-3 sm:px-4 py-3 text-left transition-colors hover:bg-muted/50 ${
                       selectedContact.id === contact.id ? "bg-muted/70" : ""
                     }`}
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm text-foreground">{contact.name}</span>
-                        <span className="h-2 w-2 rounded-full bg-info" />
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="font-semibold text-sm text-foreground truncate">{contact.name}</span>
+                        <span className="h-2 w-2 rounded-full bg-info shrink-0" />
                         {contact.priority && (
-                          <span className="text-destructive text-xs">🚩</span>
+                          <span className="text-destructive text-xs shrink-0">🚩</span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-medium ${statusColor[contact.status]}`}>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className={`text-[10px] sm:text-xs font-medium ${statusColor[contact.status]}`}>
                           • {statusLabel[contact.status]}
                         </span>
-                        <span className="text-xs text-muted-foreground">{contact.time}</span>
+                        <span className="text-[10px] sm:text-xs text-muted-foreground">{contact.time}</span>
                       </div>
                     </div>
                     <div className="mt-1 flex flex-wrap gap-1">
@@ -326,41 +333,49 @@ export default function AIReceptionist() {
             </div>
 
             {/* Right panel — Detail */}
-            <div className="flex flex-1 flex-col overflow-hidden">
+            <div className={`flex flex-1 flex-col overflow-hidden ${showDetail ? "flex" : "hidden md:flex"}`}>
               {/* Contact header */}
-              <div className="flex items-center justify-between border-b border-border px-6 py-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-bold text-foreground">
+              <div className="flex items-center justify-between border-b border-border px-3 sm:px-6 py-3 gap-2">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="md:hidden h-8 w-8 shrink-0"
+                    onClick={() => setShowDetail(false)}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-muted text-xs sm:text-sm font-bold text-foreground shrink-0">
                     {selectedContact.name
                       .split(" ")
                       .map((n) => n[0])
                       .join("")}
                   </div>
-                  <div>
-                    <p className="font-semibold text-foreground">{selectedContact.name}</p>
-                    <p className="text-xs text-muted-foreground">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-sm text-foreground truncate">{selectedContact.name}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
                       {selectedContact.email} &nbsp; {selectedContact.phone}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="gap-1">
+                <div className="flex items-center gap-1 shrink-0">
+                  <Button variant="outline" size="sm" className="gap-1 hidden sm:inline-flex">
                     <User className="h-3.5 w-3.5" /> View Customer
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-1">
+                  <Button variant="outline" size="sm" className="gap-1 hidden sm:inline-flex">
                     <Clock className="h-3.5 w-3.5" /> Set Reminder
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-muted-foreground">
+                  <Button variant="ghost" size="icon" className="text-muted-foreground h-8 w-8">
                     <Phone className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" className="text-muted-foreground">
+                  <Button variant="ghost" size="icon" className="text-muted-foreground h-8 w-8">
                     <MessageSquare className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
 
               {/* Channel tabs */}
-              <div className="flex gap-1 border-b border-border px-6 py-2">
+              <div className="flex gap-1 border-b border-border px-3 sm:px-6 py-2 overflow-x-auto">
                 {channelTabs.map((tab) => {
                   const channelData = selectedContact.channels.find((c) => c.type === tab.type);
                   const count = channelData?.count || 0;
@@ -368,13 +383,13 @@ export default function AIReceptionist() {
                     <button
                       key={tab.type}
                       onClick={() => setActiveTab(tab.type)}
-                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                      className={`flex items-center gap-1 sm:gap-1.5 rounded-lg px-2 sm:px-3 py-1.5 text-[10px] sm:text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
                         activeTab === tab.type
                           ? "bg-primary/10 text-primary"
                           : "text-muted-foreground hover:bg-muted"
                       }`}
                     >
-                      <tab.icon className="h-3.5 w-3.5" />
+                      <tab.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                       {tab.label}
                       {count > 0 && (
                         <Badge variant="secondary" className="h-4 min-w-4 px-1 text-[10px]">
@@ -387,22 +402,22 @@ export default function AIReceptionist() {
               </div>
 
               {/* Conversation details */}
-              <ScrollArea className="flex-1 px-6 py-4">
+              <ScrollArea className="flex-1 px-3 sm:px-6 py-4">
                 <div className="space-y-3">
                   {details.map((detail) => (
-                    <div key={detail.id} className="rounded-xl border border-border bg-card p-4">
+                    <div key={detail.id} className="rounded-xl border border-border bg-card p-3 sm:p-4">
                       <button
                         onClick={() => toggleDetail(detail.id)}
-                        className="flex w-full items-start justify-between"
+                        className="flex w-full items-start justify-between gap-2"
                       >
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-semibold text-sm text-foreground">{detail.title}</h3>
-                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${detail.tagColor}`}>
+                        <div className="flex items-center gap-2 min-w-0">
+                          <h3 className="font-semibold text-xs sm:text-sm text-foreground truncate">{detail.title}</h3>
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium shrink-0 ${detail.tagColor}`}>
                             {detail.tag}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+                          <span className="text-[10px] sm:text-xs text-muted-foreground hidden sm:inline">
                             {detail.expanded ? "Hide details" : "View details"}
                           </span>
                           {detail.expanded ? (
@@ -412,10 +427,10 @@ export default function AIReceptionist() {
                           )}
                         </div>
                       </button>
-                      <p className="text-xs text-muted-foreground mt-1">{detail.date}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">{detail.date}</p>
 
                       {detail.expanded && (
-                        <div className="mt-4 space-y-4">
+                        <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-4">
                           {detail.keyPoints && (
                             <div>
                               <p className="text-xs font-semibold text-foreground mb-1">Key Points</p>
@@ -439,9 +454,9 @@ export default function AIReceptionist() {
                           )}
 
                           {detail.hasAudio && (
-                            <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/50 px-3 py-2">
-                              <button className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                                <Play className="h-3.5 w-3.5" />
+                            <div className="flex items-center gap-2 sm:gap-3 rounded-lg border border-border bg-muted/50 px-2 sm:px-3 py-2">
+                              <button className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                                <Play className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                               </button>
                               <div className="flex-1">
                                 <div className="flex h-4 items-center gap-px">
@@ -454,7 +469,7 @@ export default function AIReceptionist() {
                                   ))}
                                 </div>
                               </div>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-[10px] sm:text-xs text-muted-foreground">
                                 0:00 / {detail.audioDuration}
                               </span>
                             </div>
