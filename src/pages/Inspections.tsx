@@ -439,7 +439,7 @@ const Inspections = () => {
                 <div className="flex items-center justify-between gap-3 flex-wrap">
                   <div className="flex items-center gap-3">
                     <Select value={conditionProperty} onValueChange={setConditionProperty}>
-                      <SelectTrigger className="w-60 h-9 text-sm"><SelectValue /></SelectTrigger>
+                      <SelectTrigger className="w-full sm:w-60 h-9 text-sm"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="56 Elm Cres, VIC">56 Elm Cres, VIC</SelectItem>
                         <SelectItem value="24 Casterly Rock, NSW">24 Casterly Rock, NSW</SelectItem>
