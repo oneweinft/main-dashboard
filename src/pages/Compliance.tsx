@@ -166,7 +166,7 @@ const Compliance = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${
+                    className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 ${
                       activeTab === tab.id
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
