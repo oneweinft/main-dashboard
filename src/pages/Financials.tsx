@@ -165,22 +165,22 @@ const Financials = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
-          <main className="flex-1 overflow-auto p-6 space-y-6">
-            <div className="flex items-center justify-between">
+          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <DollarSign className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Financials</h1>
-                  <p className="text-sm text-muted-foreground">Revenue, expenses & import/export tools</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground">Financials</h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Revenue, expenses & import/export tools</p>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" className="gap-2" onClick={() => navigate("/migration")}>
-                  <Upload className="h-4 w-4" /> Import via Migration
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" className="gap-2 text-xs sm:text-sm" onClick={() => navigate("/migration")}>
+                  <Upload className="h-4 w-4" /> <span className="hidden sm:inline">Import via</span> Migration
                 </Button>
                 <Dialog open={addOpen} onOpenChange={setAddOpen}>
                   <DialogTrigger asChild>

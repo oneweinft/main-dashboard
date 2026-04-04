@@ -30,13 +30,13 @@ const Reports = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
-          <main className="flex-1 overflow-auto p-6">
+          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
             <div className="bg-card rounded-xl border border-border p-6 space-y-6">
               {/* Title & Report Type */}
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-foreground">Churn Analysis</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">Churn Analysis</h1>
                 <span className="text-sm text-muted-foreground">Pool Safety</span>
               </div>
 

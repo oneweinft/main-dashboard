@@ -161,20 +161,20 @@ export default function Tasks() {
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
           <main className="flex-1 overflow-auto">
             {/* Hero */}
-            <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-8 py-10 text-white">
+            <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 sm:px-8 py-6 sm:py-10 text-white">
               <div className="max-w-[1600px] mx-auto">
-                <h1 className="text-3xl font-bold mb-2">Task Board</h1>
-                <p className="text-emerald-100 text-lg">
+                <h1 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Task Board</h1>
+                <p className="text-emerald-100 text-sm sm:text-lg">
                   Track and manage property management tasks across all stages.
                 </p>
               </div>
             </div>
 
-            <div className="max-w-[1600px] mx-auto px-8 py-6">
+            <div className="max-w-[1600px] mx-auto px-3 sm:px-8 py-4 sm:py-6">
               {/* AI Digest Panel */}
               {unsentNotifications.length > 0 && (
                 <Card className="mb-6 border-primary/20">
@@ -271,7 +271,7 @@ export default function Tasks() {
               </div>
 
               {/* Kanban Board */}
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 overflow-x-auto">
                 {columns.map(col => (
                   <div
                     key={col.key}

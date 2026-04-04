@@ -146,12 +146,12 @@ const Compliance = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
-          <main className="flex-1 overflow-auto p-6">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-primary italic">Compliance</h1>
+          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <h1 className="text-xl sm:text-2xl font-bold text-primary italic">Compliance</h1>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" className="gap-1.5"><Download className="h-4 w-4" /> Export</Button>
                   <Button onClick={() => navigate("/soc2-checklist")} className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
@@ -161,12 +161,12 @@ const Compliance = () => {
               </div>
 
               {/* Tabs */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex overflow-x-auto gap-2 pb-1">
                 {complianceTabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${
+                    className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-colors flex items-center gap-2 whitespace-nowrap shrink-0 ${
                       activeTab === tab.id
                         ? "bg-primary text-primary-foreground"
                         : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
@@ -183,8 +183,8 @@ const Compliance = () => {
               </div>
 
               {/* Search bar */}
-              <div className="flex items-center gap-3">
-                <div className="relative flex-1 max-w-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search properties, contacts..."

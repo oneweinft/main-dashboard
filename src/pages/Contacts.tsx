@@ -209,19 +209,19 @@ const Contacts = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
-          <main className="flex-1 overflow-auto p-6">
-            <div className="space-y-6">
+          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Header */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
                     <Users className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
-                    <p className="text-sm text-muted-foreground">Manage all your contacts in one place</p>
+                    <h1 className="text-xl sm:text-2xl font-bold text-foreground">Contacts</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Manage all your contacts in one place</p>
                   </div>
                 </div>
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setAddOpen(true)}>
@@ -230,8 +230,8 @@ const Contacts = () => {
               </div>
 
               {/* Filters */}
-              <div className="flex items-center gap-3 bg-card rounded-xl border border-border p-4">
-                <div className="relative flex-1 max-w-sm">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-card rounded-xl border border-border p-3 sm:p-4">
+                <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Search contacts..."
@@ -255,7 +255,7 @@ const Contacts = () => {
 
               {/* Tabs */}
               <Tabs defaultValue="renters" className="space-y-4">
-                <TabsList className="bg-muted/50 p-1 flex-wrap">
+                <TabsList className="bg-muted/50 p-1 w-full overflow-x-auto flex-nowrap justify-start">
                   {tabConfig.map((tab) => (
                     <TabsTrigger key={tab.value} value={tab.value} className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                       <tab.icon className="h-4 w-4" />

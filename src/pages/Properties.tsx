@@ -63,17 +63,17 @@ const Properties = () => {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
-          <main className="flex-1 overflow-auto p-6 space-y-6">
-            <div className="flex items-center justify-between">
+          <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6 space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                   <Building2 className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Properties</h1>
-                  <p className="text-sm text-muted-foreground">Manage your property portfolio</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground">Properties</h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Manage your property portfolio</p>
                 </div>
               </div>
               <Dialog open={open} onOpenChange={setOpen}>
@@ -145,7 +145,7 @@ const Properties = () => {
               <CardHeader className="pb-3">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <Tabs value={tab} onValueChange={setTab}>
-                    <TabsList>
+                     <TabsList className="w-full overflow-x-auto flex-nowrap justify-start">
                       <TabsTrigger value="all">All ({properties.length})</TabsTrigger>
                       <TabsTrigger value="occupied">Occupied</TabsTrigger>
                       <TabsTrigger value="vacant">Vacant</TabsTrigger>
@@ -156,14 +156,14 @@ const Properties = () => {
                   <div className="flex gap-2">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input placeholder="Search properties..." className="pl-9 w-[220px]" value={search} onChange={(e) => setSearch(e.target.value)} />
+                      <Input placeholder="Search properties..." className="pl-9 w-full sm:w-[220px]" value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
                     <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-0">
-                <Table>
+              <CardContent className="p-0 overflow-x-auto">
+                <Table className="min-w-[700px]">
                   <TableHeader>
                     <TableRow>
                       <TableHead>Address</TableHead>
