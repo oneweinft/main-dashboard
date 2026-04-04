@@ -72,8 +72,8 @@ const Properties = () => {
                   <Building2 className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Properties</h1>
-                  <p className="text-sm text-muted-foreground">Manage your property portfolio</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground">Properties</h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Manage your property portfolio</p>
                 </div>
               </div>
               <Dialog open={open} onOpenChange={setOpen}>
