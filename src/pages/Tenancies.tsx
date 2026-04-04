@@ -124,7 +124,7 @@ const Tenancies = () => {
                   <Key className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Tenancies</h1>
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground">Tenancies</h1>
                   <p className="text-sm text-muted-foreground">Manage tenants and lease agreements</p>
                 </div>
               </div>

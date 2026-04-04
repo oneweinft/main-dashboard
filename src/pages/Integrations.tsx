@@ -118,7 +118,7 @@ const Integrations = () => {
                     <Link2 className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-foreground">Integrations</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold text-foreground">Integrations</h1>
                     <p className="text-sm text-muted-foreground">
                       {connected} connected · {available} available · API, FTP & Webhook
                     </p>
@@ -139,7 +139,7 @@ const Integrations = () => {
                         <stat.icon className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="text-2xl font-bold text-foreground">{stat.count}</p>
+                        <p className="text-xl sm:text-2xl font-bold text-foreground">{stat.count}</p>
                         <p className="text-xs text-muted-foreground">{stat.label} · {stat.desc}</p>
                       </div>
                     </CardContent>

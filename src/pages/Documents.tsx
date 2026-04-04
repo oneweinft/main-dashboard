@@ -42,7 +42,7 @@ const Documents = () => {
             <div className="bg-card rounded-xl border border-border p-6 space-y-6">
               {/* Header */}
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-foreground">Documents</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">Documents</h1>
                 <div className="flex items-center gap-3">
                   <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 cursor-pointer">
                     Category

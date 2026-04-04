@@ -100,7 +100,7 @@ const ServicesPortal = () => {
           <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6 space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Services Portal</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">Services Portal</h1>
                 <p className="text-muted-foreground mt-1">Unified access for renters, landlords, and contractors</p>
               </div>
               <div className="flex gap-2">

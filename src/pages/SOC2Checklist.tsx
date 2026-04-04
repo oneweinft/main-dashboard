@@ -166,7 +166,7 @@ const SOC2Checklist = () => {
                     <Shield className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-foreground">SOC 2 Compliance Checklist</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold text-foreground">SOC 2 Compliance Checklist</h1>
                     <p className="text-sm text-muted-foreground">Trust Services Criteria — Security, Availability, Confidentiality</p>
                   </div>
                 </div>
