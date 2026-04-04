@@ -220,8 +220,8 @@ const Contacts = () => {
                     <Users className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold text-foreground">Contacts</h1>
-                    <p className="text-sm text-muted-foreground">Manage all your contacts in one place</p>
+                    <h1 className="text-xl sm:text-2xl font-bold text-foreground">Contacts</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Manage all your contacts in one place</p>
                   </div>
                 </div>
                 <Button className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setAddOpen(true)}>
