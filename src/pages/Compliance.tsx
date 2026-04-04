@@ -161,7 +161,7 @@ const Compliance = () => {
               </div>
 
               {/* Tabs */}
-              <div className="flex flex-wrap gap-2">
+              <div className="flex overflow-x-auto gap-2 pb-1">
                 {complianceTabs.map((tab) => (
                   <button
                     key={tab.id}
