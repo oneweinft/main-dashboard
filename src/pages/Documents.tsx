@@ -148,8 +148,8 @@ const Documents = () => {
               {activeTab === "forms" ? (
                 <FormsNotices />
               ) : (
-                <div className="border border-border rounded-lg overflow-hidden">
-                  <table className="w-full">
+                <div className="border border-border rounded-lg overflow-x-auto">
+                  <table className="w-full min-w-[600px]">
                     <thead>
                       <tr className="bg-secondary/50">
                         <th className="p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider w-10">
