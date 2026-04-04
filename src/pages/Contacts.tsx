@@ -212,9 +212,9 @@ const Contacts = () => {
         <div className="flex-1 flex flex-col min-w-0">
           <DashboardHeader />
           <main className="flex-1 overflow-auto p-3 sm:p-4 md:p-6">
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Header */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
                     <Users className="h-5 w-5 text-primary-foreground" />
