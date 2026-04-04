@@ -338,12 +338,13 @@ export default function AIReceptionist() {
               <div className="flex items-center justify-between border-b border-border px-3 sm:px-6 py-3 gap-2">
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
                   <Button
-                    variant="ghost"
-                    size="icon"
-                    className="md:hidden h-8 w-8 shrink-0"
+                    variant="outline"
+                    size="sm"
+                    className="md:hidden shrink-0 gap-1.5 text-xs font-medium"
                     onClick={() => setShowDetail(false)}
                   >
                     <ArrowLeft className="h-4 w-4" />
+                    Back to Inbox
                   </Button>
                   <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-muted text-xs sm:text-sm font-bold text-foreground shrink-0">
                     {selectedContact.name
