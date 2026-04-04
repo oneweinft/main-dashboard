@@ -489,7 +489,7 @@ const Inspections = () => {
                               <tr key={ii} className="border-t border-border hover:bg-secondary/30 transition-colors">
                                 <td className="p-2.5 text-foreground text-xs font-medium">{item.name}</td>
                                 <td className="p-2.5"><ConditionBadge condition={item.condition} /></td>
-                                <td className="p-2.5 text-xs text-muted-foreground">{item.notes || "—"}</td>
+                                <td className="p-2.5 text-xs text-muted-foreground hidden sm:table-cell">{item.notes || "—"}</td>
                                 <td className="p-2.5 text-center">
                                   <Button variant="ghost" size="icon" className="h-7 w-7">
                                     <Camera className="h-3.5 w-3.5 text-muted-foreground" />
