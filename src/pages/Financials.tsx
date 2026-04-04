@@ -174,8 +174,8 @@ const Financials = () => {
                   <DollarSign className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Financials</h1>
-                  <p className="text-sm text-muted-foreground">Revenue, expenses & import/export tools</p>
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground">Financials</h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Revenue, expenses & import/export tools</p>
                 </div>
               </div>
               <div className="flex gap-2">
