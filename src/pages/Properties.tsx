@@ -145,7 +145,7 @@ const Properties = () => {
               <CardHeader className="pb-3">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <Tabs value={tab} onValueChange={setTab}>
-                    <TabsList>
+                     <TabsList className="w-full overflow-x-auto flex-nowrap justify-start">
                       <TabsTrigger value="all">All ({properties.length})</TabsTrigger>
                       <TabsTrigger value="occupied">Occupied</TabsTrigger>
                       <TabsTrigger value="vacant">Vacant</TabsTrigger>
