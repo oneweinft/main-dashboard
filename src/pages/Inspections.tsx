@@ -474,13 +474,13 @@ const Inspections = () => {
                       <CardTitle className="text-sm font-semibold text-foreground">{room.room}</CardTitle>
                     </CardHeader>
                     <CardContent className="px-4 pb-4">
-                      <div className="border border-border rounded-lg overflow-hidden">
-                        <table className="w-full text-sm">
+                      <div className="border border-border rounded-lg overflow-x-auto">
+                        <table className="w-full text-sm min-w-[480px]">
                           <thead>
                             <tr className="bg-secondary/50">
                               <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase">Item</th>
                               <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase w-28">Condition</th>
-                              <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase">Notes</th>
+                              <th className="p-2.5 text-left text-xs font-semibold text-muted-foreground uppercase hidden sm:table-cell">Notes</th>
                               <th className="p-2.5 text-center text-xs font-semibold text-muted-foreground uppercase w-16">Photo</th>
                             </tr>
                           </thead>
