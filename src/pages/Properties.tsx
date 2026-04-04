@@ -156,7 +156,7 @@ const Properties = () => {
                   <div className="flex gap-2">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                      <Input placeholder="Search properties..." className="pl-9 w-[220px]" value={search} onChange={(e) => setSearch(e.target.value)} />
+                      <Input placeholder="Search properties..." className="pl-9 w-full sm:w-[220px]" value={search} onChange={(e) => setSearch(e.target.value)} />
                     </div>
                     <Button variant="outline" size="icon"><Filter className="h-4 w-4" /></Button>
                   </div>
