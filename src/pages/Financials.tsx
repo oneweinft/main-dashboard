@@ -178,9 +178,9 @@ const Financials = () => {
                   <p className="text-xs sm:text-sm text-muted-foreground">Revenue, expenses & import/export tools</p>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" className="gap-2" onClick={() => navigate("/migration")}>
-                  <Upload className="h-4 w-4" /> Import via Migration
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" className="gap-2 text-xs sm:text-sm" onClick={() => navigate("/migration")}>
+                  <Upload className="h-4 w-4" /> <span className="hidden sm:inline">Import via</span> Migration
                 </Button>
                 <Dialog open={addOpen} onOpenChange={setAddOpen}>
                   <DialogTrigger asChild>
