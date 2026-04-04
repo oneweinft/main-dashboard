@@ -239,7 +239,10 @@ export default function AIReceptionist() {
         <main className="flex flex-1 flex-col overflow-hidden">
           {/* Top bar */}
           <header className="flex h-14 items-center justify-between border-b border-border px-3 sm:px-4">
-            <h1 className="text-base sm:text-lg font-bold text-foreground truncate">AI Voice Receptionist</h1>
+            <div className="flex items-center gap-2 min-w-0">
+              <SidebarTrigger className="md:hidden" />
+              <h1 className="text-base sm:text-lg font-bold text-foreground truncate">AI Voice Receptionist</h1>
+            </div>
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <a
                 href="https://vapi.ai"
