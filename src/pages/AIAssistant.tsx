@@ -1,9 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Send, ArrowLeft, MessageSquare, Home, Settings, Volume2, VolumeX, Brain, Bell, BellOff, Zap, Globe, Shield } from "lucide-react";
+import { Mic, MicOff, PhoneOff, Send, ArrowLeft, MessageSquare, Home, Settings, Volume2, VolumeX, Brain, Bell, BellOff, Zap, Globe, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useData } from "@/context/DataContext";
+import OrganicOrb from "@/components/OrganicOrb";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,67 +26,7 @@ import {
 
 type Message = { role: "user" | "assistant"; content: string };
 
-function JarvisOrb({ isActive }: { isActive: boolean }) {
-  return (
-    <div className="relative flex items-center justify-center">
-      {[1, 2, 3].map((i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{
-            width: 160 + i * 40,
-            height: 160 + i * 40,
-            background: `radial-gradient(circle, hsla(160, 80%, 50%, ${0.08 - i * 0.02}) 0%, transparent 70%)`,
-          }}
-          animate={{
-            scale: isActive ? [1, 1.1 + i * 0.05, 1] : [1, 1.03, 1],
-            opacity: isActive ? [0.6, 1, 0.6] : [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 2 + i * 0.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-      ))}
-      <motion.div
-        className="relative h-40 w-40 rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle at 40% 35%, hsl(160, 80%, 75%), hsl(160, 80%, 50%) 40%, hsl(170, 70%, 35%) 70%, hsl(180, 60%, 15%) 100%)",
-          boxShadow:
-            "0 0 60px 15px hsla(160, 80%, 50%, 0.4), 0 0 120px 40px hsla(160, 80%, 50%, 0.2), inset 0 0 40px 10px hsla(160, 80%, 70%, 0.3)",
-        }}
-        animate={{
-          scale: isActive ? [1, 1.08, 1] : [1, 1.03, 1],
-          rotate: [0, 360],
-        }}
-        transition={{
-          scale: { duration: isActive ? 1.5 : 3, repeat: Infinity, ease: "easeInOut" },
-          rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-        }}
-      >
-        <motion.div
-          className="absolute inset-4 rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle at 35% 30%, hsla(155, 100%, 90%, 0.9), hsla(160, 80%, 50%, 0.3) 50%, transparent 70%)",
-          }}
-          animate={{
-            opacity: isActive ? [0.7, 1, 0.7] : [0.5, 0.7, 0.5],
-            scale: isActive ? [1, 1.1, 1] : [1, 1.02, 1],
-          }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background:
-              "conic-gradient(from 0deg, transparent, hsla(160, 80%, 50%, 0.15), transparent, hsla(160, 70%, 40%, 0.1), transparent)",
-          }}
-          animate={{ rotate: [0, -360] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
-      </motion.div>
-    </div>
-  );
-}
+// Using OrganicOrb component - see @/components/OrganicOrb.tsx
 
 export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -297,7 +240,7 @@ export default function AIAssistant() {
               exit={{ opacity: 0, scale: 0.9 }}
               className="flex flex-col items-center gap-8"
             >
-              <JarvisOrb isActive={isListening} />
+              <OrganicOrb isActive={isListening} intensity={1.2} size={280} />
 
               <motion.p
                 className="text-sm tracking-widest text-primary/80"
